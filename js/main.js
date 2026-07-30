@@ -24,7 +24,10 @@ navLinks.querySelectorAll('a').forEach(link => {
 const sections = document.querySelectorAll('section[id]');
 const navItems = document.querySelectorAll('.nav-links a[href^="#"]');
 
+const header = document.querySelector('.site-header');
+
 const onScroll = () => {
+  header.classList.toggle('scrolled', window.scrollY > 10);
   const scrollY = window.scrollY + 80;
   sections.forEach(sec => {
     if (scrollY >= sec.offsetTop && scrollY < sec.offsetTop + sec.offsetHeight) {
