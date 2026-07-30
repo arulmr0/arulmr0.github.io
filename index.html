@@ -67,7 +67,7 @@
           <a href="#publications" class="btn btn-outline">Publications</a>
           <a href="cv.pdf" class="btn btn-outline" target="_blank" rel="noopener">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-            CV
+            CV <span style="font-size:.75em;opacity:.65;font-weight:400">(Jul 2026)</span>
           </a>
           <a href="https://scholar.google.com/citations?user=vGGhoQ8AAAAJ&hl=en" class="btn btn-outline" target="_blank" rel="noopener" aria-label="Google Scholar profile">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5.242 13.769 0 9.5 12 0l12 9.5-5.242 4.269C17.548 11.249 14.978 9.5 12 9.5c-2.977 0-5.548 1.748-6.758 4.269z"/><path d="M12 10a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"/></svg>
@@ -78,6 +78,28 @@
       </div>
     </div>
   </section>
+
+  <!-- Stats Bar -->
+  <div class="stats-bar">
+    <div class="container stats-grid">
+      <div class="stat-item">
+        <span class="stat-number">125+</span>
+        <span class="stat-label">Publications</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">1,800+</span>
+        <span class="stat-label">Citations</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">15+</span>
+        <span class="stat-label">Years Experience</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">6</span>
+        <span class="stat-label">Alumni Graduated</span>
+      </div>
+    </div>
+  </div>
 
   <!-- Research -->
   <section class="section section-alt" id="research">
@@ -190,10 +212,11 @@
 
       <div class="pub-list" id="pubList">
 
-        <article class="pub-item" data-type="journal" data-year="2025">
+        <article class="pub-item pub-featured" data-type="journal" data-year="2025">
           <div class="pub-meta">
             <span class="pub-badge journal">Journal</span>
             <span class="pub-year">2025</span>
+            <span class="pub-featured-badge">★ Featured</span>
           </div>
           <h3 class="pub-title">
             <a href="https://www.nature.com/articles/s41598-025-25075-4" target="_blank" rel="noopener">Gaussian dual adjacency graph based spatial correlated and temporal time dependent traffic prediction in Bangalore City</a>
@@ -318,6 +341,7 @@
           <div class="pub-meta">
             <span class="pub-badge book">Book</span>
             <span class="pub-year">2019</span>
+            <span class="pub-featured-badge">★ Featured</span>
           </div>
           <h3 class="pub-title">
             <a href="https://link.springer.com/book/10.1007/978-3-030-02674-5" target="_blank" rel="noopener">Computational Intelligence and Sustainable Systems: Intelligence and Sustainable Computing</a>
@@ -804,15 +828,15 @@ Advances in Computing, Communication, Automation and Biomedical Technology
       </div>
       <ul class="news-list">
         <li class="news-item">
-          <span class="news-date">Jul 2026</span>
-          <div class="news-body">
-            <p>Paper accepted in <strong>Engineering, Technology &amp; Applied Science Research</strong>: <em>"A Machine Learning-Based Recommendation System Using Content-Based Filtering Techniques"</em>.</p>
-          </div>
-        </li>
-        <li class="news-item">
           <span class="news-date">Oct 2026</span>
           <div class="news-body">
             <p>Serving as <strong>International Advisory / Technical Programming Committee Member</strong> at <a href="https://www.icaeia.com/iac.html" target="_blank" rel="noopener">ICAEIA 2026</a>.</p>
+          </div>
+        </li>
+        <li class="news-item">
+          <span class="news-date">Jul 2026</span>
+          <div class="news-body">
+            <p>Paper accepted in <strong>Engineering, Technology &amp; Applied Science Research</strong>: <em>"A Machine Learning-Based Recommendation System Using Content-Based Filtering Techniques"</em>.</p>
           </div>
         </li>
       </ul>
@@ -873,7 +897,8 @@ Advances in Computing, Communication, Automation and Biomedical Technology
           </div>
         </div>
 
-        <form class="contact-form" id="contactForm" novalidate>
+        <!-- To enable real email delivery: sign up at formspree.io, create a form, then set data-endpoint="https://formspree.io/f/YOUR_FORM_ID" below -->
+        <form class="contact-form" id="contactForm" data-endpoint="" novalidate>
           <div class="form-group">
             <label for="name">Name</label>
             <input type="text" id="name" name="name" placeholder="Your full name" required />

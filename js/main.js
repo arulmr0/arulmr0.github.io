@@ -9,6 +9,7 @@ const navLinks  = document.getElementById('navLinks');
 
 navToggle.addEventListener('click', () => {
   const open = navLinks.classList.toggle('open');
+  navToggle.classList.toggle('open', open);
   navToggle.setAttribute('aria-expanded', open);
 });
 
@@ -16,6 +17,7 @@ navToggle.addEventListener('click', () => {
 navLinks.querySelectorAll('a').forEach(link => {
   link.addEventListener('click', () => {
     navLinks.classList.remove('open');
+    navToggle.classList.remove('open');
     navToggle.setAttribute('aria-expanded', 'false');
   });
 });
@@ -99,7 +101,7 @@ applyFilter('all');
 /* --- Contact form (front-end only) ----------------------- */
 const contactForm = document.getElementById('contactForm');
 
-contactForm.addEventListener('submit', e => {
+contactForm.addEventListener('submit', async e => {
   e.preventDefault();
 
   const name    = contactForm.name.value.trim();
@@ -115,9 +117,27 @@ contactForm.addEventListener('submit', e => {
     return;
   }
 
-  /* Replace with a real backend / Formspree / EmailJS call */
-  showFormMsg('Thank you! Your message has been received. I will respond within 2 business days.', 'success');
-  contactForm.reset();
+  const endpoint = contactForm.dataset.endpoint;
+  if (endpoint) {
+    try {
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { Accept: 'application/json' },
+        body: new FormData(contactForm)
+      });
+      if (res.ok) {
+        showFormMsg('Thank you! Your message has been sent. I will respond within 2 business days.', 'success');
+        contactForm.reset();
+      } else {
+        showFormMsg('Something went wrong. Please email me directly at arulmr@gmail.com', 'error');
+      }
+    } catch {
+      showFormMsg('Something went wrong. Please email me directly at arulmr@gmail.com', 'error');
+    }
+  } else {
+    showFormMsg('Thank you! Your message has been received. I will respond within 2 business days.', 'success');
+    contactForm.reset();
+  }
 });
 
 function showFormMsg(text, type) {
