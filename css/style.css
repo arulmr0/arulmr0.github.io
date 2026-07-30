@@ -1092,6 +1092,74 @@ ul { list-style: none; }
 ::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--amber-mid); }
 
+/* --- Talks & Keynotes ------------------------------------- */
+.talks-list { display: flex; flex-direction: column; gap: 16px; margin-top: 8px; }
+
+.talk-card {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--teal);
+  border-radius: 8px;
+  padding: 20px 24px;
+  transition: box-shadow 200ms ease, border-color 200ms ease;
+}
+.talk-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,.07);
+  border-left-color: var(--amber-mid);
+}
+
+.talk-type-badge {
+  flex-shrink: 0;
+  font-size: .68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--teal);
+  background: rgba(14,116,144,.08);
+  border: 1px solid rgba(14,116,144,.2);
+  padding: 4px 10px;
+  border-radius: 4px;
+  margin-top: 2px;
+  white-space: nowrap;
+}
+
+.talk-body { flex: 1; }
+.talk-title {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.talk-event {
+  font-size: .9rem;
+  font-weight: 500;
+  color: var(--text-2);
+  margin-bottom: 6px;
+}
+.talk-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-size: .8rem;
+  color: var(--text-3);
+}
+.talk-date {
+  font-weight: 600;
+  color: var(--amber);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+.talk-sep { color: var(--border-2); }
+
+@media (max-width: 480px) {
+  .talk-card { flex-direction: column; gap: 10px; }
+}
+
 /* --- Stats Bar -------------------------------------------- */
 .stats-bar {
   background: var(--deep);
