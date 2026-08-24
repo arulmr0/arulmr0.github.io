@@ -285,3 +285,150 @@ if ('IntersectionObserver' in window) {
     observer.observe(el);
   });
 }
+
+/* ============================================================
+   VISUAL EFFECTS 1–7
+   ============================================================ */
+
+/* --- #1 Hero particle canvas ------------------------------ */
+(function () {
+  const canvas = document.getElementById('heroCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, particles;
+
+  const COLORS = ['rgba(14,116,144,.7)', 'rgba(192,106,24,.6)', 'rgba(255,255,255,.3)'];
+
+  function resize() {
+    const hero = canvas.parentElement;
+    W = canvas.width  = hero.offsetWidth;
+    H = canvas.height = hero.offsetHeight;
+  }
+
+  function mkParticle() {
+    return {
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: Math.random() * 1.8 + 0.4,
+      vx: (Math.random() - .5) * .25,
+      vy: (Math.random() - .5) * .25,
+      color: COLORS[Math.floor(Math.random() * COLORS.length)],
+    };
+  }
+
+  function init() {
+    resize();
+    particles = Array.from({ length: 90 }, mkParticle);
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
+      if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = p.color;
+      ctx.fill();
+    });
+    /* Draw connecting lines for nearby pairs */
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 90) {
+          ctx.beginPath();
+          ctx.strokeStyle = `rgba(14,116,144,${.18 * (1 - dist / 90)})`;
+          ctx.lineWidth = .5;
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+
+  init();
+  draw();
+  window.addEventListener('resize', () => { resize(); particles = Array.from({ length: 90 }, mkParticle); }, { passive: true });
+})();
+
+/* --- #2 Staggered scroll reveal --------------------------- */
+(function () {
+  const targets = document.querySelectorAll(
+    '.research-card, .course-card, .team-card, .news-item, .talk-card, .stat-item, .editorial-role'
+  );
+  targets.forEach(el => el.classList.add('reveal'));
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.12 });
+
+  targets.forEach(el => obs.observe(el));
+})();
+
+/* --- #5 Animated stat counters ---------------------------- */
+(function () {
+  function parseNum(str) {
+    return parseInt(str.replace(/[^0-9]/g, ''), 10) || 0;
+  }
+  function animateCounter(el, target, suffix) {
+    let start = null;
+    const duration = 1600;
+    function step(ts) {
+      if (!start) start = ts;
+      const progress = Math.min((ts - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.floor(eased * target).toLocaleString() + suffix;
+      if (progress < 1) requestAnimationFrame(step);
+      else el.textContent = target.toLocaleString() + suffix;
+    }
+    requestAnimationFrame(step);
+  }
+
+  const statsBar = document.querySelector('.stats-bar');
+  if (!statsBar) return;
+  let triggered = false;
+  const obs = new IntersectionObserver(entries => {
+    if (triggered || !entries[0].isIntersecting) return;
+    triggered = true;
+    statsBar.querySelectorAll('.stat-number').forEach(el => {
+      const raw = el.textContent;
+      const target = parseNum(raw);
+      const suffix = raw.includes('+') ? '+' : (raw.includes('x') ? 'x' : '');
+      animateCounter(el, target, suffix);
+    });
+  }, { threshold: 0.5 });
+  obs.observe(statsBar);
+})();
+
+/* --- #7 Custom cursor dot --------------------------------- */
+(function () {
+  const dot = document.getElementById('cursorDot');
+  if (!dot || window.matchMedia('(pointer: coarse)').matches) return;
+
+  let mx = -100, my = -100, cx = -100, cy = -100;
+  let raf;
+
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; }, { passive: true });
+
+  const hoverTargets = 'a, button, .pub-filter, .tag, .bib-btn, .stat-item';
+  document.querySelectorAll(hoverTargets).forEach(el => {
+    el.addEventListener('mouseenter', () => dot.classList.add('hovering'));
+    el.addEventListener('mouseleave', () => dot.classList.remove('hovering'));
+  });
+
+  function loop() {
+    cx += (mx - cx) * 0.18;
+    cy += (my - cy) * 0.18;
+    dot.style.left = cx + 'px';
+    dot.style.top  = cy + 'px';
+    raf = requestAnimationFrame(loop);
+  }
+  loop();
+})();
