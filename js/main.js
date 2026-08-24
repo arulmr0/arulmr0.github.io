@@ -156,6 +156,116 @@ function showFormMsg(text, type) {
   setTimeout(() => el && el.remove(), 6000);
 }
 
+/* --- #6 Dark mode ----------------------------------------- */
+const darkToggle = document.getElementById('darkToggle');
+const applyTheme = theme => {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('theme', theme);
+};
+applyTheme(localStorage.getItem('theme') || 'light');
+darkToggle.addEventListener('click', () => {
+  applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+});
+
+/* --- #3 Back-to-top --------------------------------------- */
+const backToTop = document.getElementById('backToTop');
+window.addEventListener('scroll', () => {
+  backToTop.classList.toggle('visible', window.scrollY > 400);
+}, { passive: true });
+backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+/* --- #7 Publication search -------------------------------- */
+const pubSearch = document.getElementById('pubSearch');
+pubSearch.addEventListener('input', () => {
+  const q = pubSearch.value.toLowerCase().trim();
+  pubList.querySelectorAll('.pub-year-heading').forEach(h => h.style.display = '');
+  pubList.querySelectorAll('.pub-item').forEach(item => {
+    const text = item.textContent.toLowerCase();
+    item.classList.toggle('hidden', q.length > 0 && !text.includes(q));
+  });
+  if (q.length > 0) {
+    pubList.querySelectorAll('.pub-year-heading').forEach(heading => {
+      let next = heading.nextElementSibling;
+      let allHidden = true;
+      while (next && !next.classList.contains('pub-year-heading')) {
+        if (!next.classList.contains('hidden')) { allHidden = false; break; }
+        next = next.nextElementSibling;
+      }
+      heading.style.display = allHidden ? 'none' : '';
+    });
+  }
+});
+
+/* --- #1 BibTeX copy buttons ------------------------------- */
+function generateBibTeX(article) {
+  const type  = article.dataset.type || 'journal';
+  const year  = article.dataset.year || '';
+  const titleEl  = article.querySelector('.pub-title a') || article.querySelector('.pub-title');
+  const title    = titleEl ? titleEl.textContent.trim() : '';
+  const authors  = article.querySelector('.pub-authors')?.textContent.trim() || '';
+  const venueEl  = article.querySelector('.pub-venue em');
+  const venue    = venueEl ? venueEl.textContent.trim() : '';
+  const doiEl    = article.querySelector('a[href*="doi.org"]');
+  const doi      = doiEl ? doiEl.href.replace('https://doi.org/', '') : '';
+  const key      = (authors.split(',')[0].trim().split(' ').pop() || 'Ramu') + year;
+  const bibType  = { journal: 'article', book: 'book', chapter: 'incollection', conference: 'inproceedings' }[type] || 'misc';
+  const venueField = type === 'journal' ? `  journal   = {${venue}},\n` :
+                     type === 'book'    ? '' :
+                                          `  booktitle = {${venue}},\n`;
+  return `@${bibType}{${key},\n  author    = {${authors}},\n  title     = {${title}},\n${venueField}  year      = {${year}}${doi ? `,\n  doi       = {${doi}}` : ''}\n}`;
+}
+
+document.querySelectorAll('.pub-item').forEach(article => {
+  const links = article.querySelector('.pub-links');
+  if (!links) return;
+  const btn = document.createElement('button');
+  btn.className = 'pub-link bib-btn';
+  btn.textContent = 'BibTeX';
+  btn.addEventListener('click', () => {
+    navigator.clipboard.writeText(generateBibTeX(article)).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'BibTeX'; btn.classList.remove('copied'); }, 2000);
+    });
+  });
+  links.appendChild(btn);
+});
+
+/* --- #9 Typewriter animation ------------------------------ */
+const typewriterEl = document.getElementById('typewriter');
+if (typewriterEl) {
+  const roles = ['Associate Professor', 'AI & ML Researcher', 'Keynote Speaker', 'Book Author & Editor'];
+  let ri = 0, ci = 0, deleting = false;
+  const TYPE_SPEED = 80, DELETE_SPEED = 40, PAUSE = 1800;
+  function tickTypewriter() {
+    const role = roles[ri];
+    if (!deleting) {
+      typewriterEl.textContent = role.slice(0, ++ci);
+      if (ci === role.length) { deleting = true; setTimeout(tickTypewriter, PAUSE); return; }
+    } else {
+      typewriterEl.textContent = role.slice(0, --ci);
+      if (ci === 0) { deleting = false; ri = (ri + 1) % roles.length; }
+    }
+    setTimeout(tickTypewriter, deleting ? DELETE_SPEED : TYPE_SPEED);
+  }
+  tickTypewriter();
+}
+
+/* --- #8 Live citations from Semantic Scholar -------------- */
+fetch('https://api.semanticscholar.org/graph/v1/author/search?query=Arulmurugan+Ramu+Heriot-Watt&fields=citationCount,paperCount&limit=1')
+  .then(r => r.json())
+  .then(data => {
+    const author = data.data?.[0];
+    if (!author) return;
+    document.querySelectorAll('.stat-number').forEach(el => {
+      const label = el.nextElementSibling?.textContent?.toLowerCase() || '';
+      if (label.includes('citation') && author.citationCount > 0)
+        el.textContent = author.citationCount.toLocaleString() + '+';
+      if (label.includes('publication') && author.paperCount > 0)
+        el.textContent = author.paperCount + '+';
+    });
+  }).catch(() => {});
+
 /* --- Smooth reveal on scroll (Intersection Observer) ------ */
 if ('IntersectionObserver' in window) {
   const observer = new IntersectionObserver(entries => {

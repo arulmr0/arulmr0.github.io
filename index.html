@@ -5,6 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Dr. Arulmurugan Ramu — Associate Professor & Researcher, Department of Computational Science and Software Engineering, Heriot-Watt University – Aktobe Campus, Kazakhstan." />
   <title>Dr. Arulmurugan Ramu | Associate Professor & Researcher</title>
+  <!-- Open Graph / Social sharing -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://arulmr0.github.io/" />
+  <meta property="og:title" content="Dr. Arulmurugan Ramu | Associate Professor & Researcher" />
+  <meta property="og:description" content="Associate Professor in AI & Machine Learning at Heriot-Watt University – Aktobe Campus. 125+ publications, 1,800+ citations." />
+  <meta property="og:image" content="https://arulmr0.github.io/images/profile.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Dr. Arulmurugan Ramu | Associate Professor & Researcher" />
+  <meta name="twitter:description" content="Associate Professor in AI & Machine Learning at Heriot-Watt University – Aktobe Campus. 125+ publications, 1,800+ citations." />
+  <meta name="twitter:image" content="https://arulmr0.github.io/images/profile.jpg" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
@@ -13,6 +23,10 @@
   <header class="site-header" id="top">
     <nav class="nav container">
       <a href="#top" class="nav-brand">Dr. A. Ramu</a>
+      <button class="dark-toggle" id="darkToggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+        <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
       <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
@@ -37,7 +51,7 @@
         <img src="images/profile.jpg" alt="Dr. Arulmurugan Ramu" class="hero-photo" />
       </div>
       <div class="hero-content">
-        <p class="hero-tag">Associate Professor &amp; Researcher</p>
+        <p class="hero-tag"><span id="typewriter" aria-label="Associate Professor &amp; Researcher"></span><span class="typewriter-cursor">|</span></p>
         <h1>Dr. Arulmurugan Ramu</h1>
         <p class="hero-affiliation">
           Department of Computational Science and Software Engineering<br />
@@ -100,6 +114,11 @@
         <span class="stat-label">Alumni Graduated</span>
       </div>
     </div>
+  </div>
+
+  <!-- Wave divider: dark → light -->
+  <div class="wave-divider" aria-hidden="true">
+    <svg viewBox="0 0 1440 56" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,28 C240,56 480,0 720,28 C960,56 1200,0 1440,28 L1440,0 L0,0 Z" fill="var(--deep)"/></svg>
   </div>
 
   <!-- Research -->
@@ -199,9 +218,14 @@
         <p>Selected recent publications. See
           <a href="https://scholar.google.com/citations?user=vGGhoQ8AAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar</a>
           for the full list (125+ papers, 1,800+ citations).
+          <a href="publications.bib" download class="bib-dl-link">↓ Download BibTeX</a>
         </p>
       </div>
 
+
+      <div class="pub-search-wrap">
+        <input type="search" id="pubSearch" class="pub-search" placeholder="Search publications by title or author…" aria-label="Search publications" />
+      </div>
 
       <div class="pub-filters" role="group" aria-label="Filter publications">
         <button class="pub-filter active" data-filter="all">All</button>
@@ -855,8 +879,9 @@ Advances in Computing, Communication, Automation and Biomedical Technology
 
       <div class="join-lab">
         <div class="join-card">
+          <div class="phd-open-badge">🎓 Now Accepting PhD Applications — 2025–26</div>
           <h3>Join the Lab</h3>
-          <p>I am looking for self-motivated PhD and Masters students with a strong background in mathematics, programming (Python), and a passion for AI research. If you are interested, please send your CV and a brief statement of research interests to <a href="mailto:arulmr@gmail.com">arulmr@gmail.com</a>.</p>
+          <p>I am looking for self-motivated PhD and Masters students with a strong background in mathematics, programming (Python), and a passion for AI research. Research areas: Healthcare AI, Federated Learning, Computer Vision, NLP. If you are interested, please send your CV and a brief statement of research interests to <a href="mailto:arulmr@gmail.com">arulmr@gmail.com</a>.</p>
           <a href="mailto:arulmr@gmail.com" class="btn btn-primary">Get in touch</a>
         </div>
       </div>
@@ -1009,6 +1034,14 @@ Advances in Computing, Communication, Automation and Biomedical Technology
       </p>
     </div>
   </footer>
+
+  <!-- Back-to-top button -->
+  <button class="back-to-top" id="backToTop" aria-label="Back to top" title="Back to top">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+  </button>
+
+  <!-- GoatCounter analytics — sign up at goatcounter.com and replace YOUR-SITE-CODE -->
+  <!-- <script data-goatcounter="https://YOUR-SITE-CODE.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script> -->
 
   <script src="js/main.js"></script>
 </body>
