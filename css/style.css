@@ -1746,6 +1746,7 @@ body:hover #cursorDot { opacity: .75; }
 }
 .chat-fab-label { white-space: nowrap; }
 
+.chat-panel[hidden] { display: none !important; }
 .chat-panel {
   width: 360px;
   max-width: calc(100vw - 48px);
