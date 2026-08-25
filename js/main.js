@@ -1170,3 +1170,35 @@ if ('IntersectionObserver' in window) {
     };
   }
 })();
+
+/* --- #10 Live citation counter from Semantic Scholar ------ */
+(function () {
+  const el    = document.getElementById('liveCiteCount');
+  const badge = document.getElementById('liveBadge');
+  if (!el) return;
+
+  function animateCount(from, to, suffix) {
+    const duration = 1800;
+    const start    = performance.now();
+    function tick(now) {
+      const p = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - p, 3); // easeOutCubic
+      const val  = Math.round(from + (to - from) * ease);
+      el.textContent = val.toLocaleString() + suffix;
+      if (p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  fetch('https://api.semanticscholar.org/graph/v1/author/search?query=Arulmurugan+Ramu&fields=hIndex,citationCount')
+    .then(r => r.json())
+    .then(d => {
+      const author = (d.data || []).find(a => a.citationCount && a.citationCount > 500);
+      if (!author) return;
+      const live = author.citationCount;
+      // Animate from current displayed value to live value
+      animateCount(1800, live, '+');
+      if (badge) badge.style.display = '';
+    })
+    .catch(() => { /* keep hardcoded fallback */ });
+})();
