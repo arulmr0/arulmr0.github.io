@@ -867,3 +867,251 @@ if ('IntersectionObserver' in window) {
     .then(d => { if (d.citationCount !== undefined) el.textContent = d.citationCount; })
     .catch(() => { el.textContent = '—'; });
 })();
+
+/* ============================================================
+   FEATURES 15 — New batch
+   ============================================================ */
+
+/* --- #1 Live h-index badge via Semantic Scholar ----------- */
+(function () {
+  const statGrid = document.querySelector('.stats-grid');
+  if (!statGrid) return;
+  const el = document.createElement('div');
+  el.className = 'stat-item';
+  el.innerHTML = '<span class="stat-number" id="hIdxNum">—</span><span class="stat-label">H-Index</span>';
+  statGrid.appendChild(el);
+
+  fetch('https://api.semanticscholar.org/graph/v1/author/search?query=Arulmurugan+Ramu&fields=hIndex,citationCount')
+    .then(r => r.json())
+    .then(d => {
+      const author = (d.data || []).find(a => a.hIndex);
+      if (author && author.hIndex) {
+        document.getElementById('hIdxNum').textContent = author.hIndex;
+      }
+    })
+    .catch(() => {});
+})();
+
+/* --- #2 Journal IF badges --------------------------------- */
+(function () {
+  const IF_MAP = {
+    'Scientific Reports': '4.6',
+    'Mobile Networks': '3.8',
+    'IEEE Access': '3.9',
+    'Computers, Materials': '3.0',
+    'Journal of Healthcare Engineering': '3.7',
+    'Electronics': '2.9',
+    'Sensors': '3.5',
+    'Diagnostics': '3.6',
+    'Sustainability': '3.3',
+    'Springer': null,
+    'Nature': '64.8',
+  };
+  document.querySelectorAll('.pub-venue').forEach(el => {
+    const text = el.textContent;
+    for (const [key, val] of Object.entries(IF_MAP)) {
+      if (val && text.includes(key)) {
+        const badge = document.createElement('span');
+        badge.className = 'if-badge';
+        badge.textContent = val;
+        el.appendChild(badge);
+        break;
+      }
+    }
+  });
+})();
+
+/* --- #3 Peer review counter (stat item) ------------------- */
+(function () {
+  const statGrid = document.querySelector('.stats-grid');
+  if (!statGrid) return;
+  const el = document.createElement('div');
+  el.className = 'stat-item';
+  el.innerHTML = '<span class="stat-number" data-target="300" data-suffix="+">0+</span><span class="stat-label">Papers Reviewed</span>';
+  statGrid.appendChild(el);
+})();
+
+/* --- #5 Keyboard shortcut palette ------------------------- */
+(function () {
+  const overlay = document.getElementById('kbPalette');
+  if (!overlay) return;
+  const closeBtn = overlay.querySelector('.kb-close');
+
+  function openPalette() {
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closePalette() {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('keydown', e => {
+    const tag = document.activeElement.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+    if (e.key === '?' || e.key === '/') { e.preventDefault(); openPalette(); }
+    if (e.key === 'Escape') closePalette();
+    if (e.key === 'd' || e.key === 'D') document.getElementById('darkToggle')?.click();
+    if (e.key === 'p' || e.key === 'P') { document.querySelector('#publications a, #publications')?.scrollIntoView({behavior:'smooth'}); }
+    if (e.key === 'c' || e.key === 'C') { document.getElementById('contact')?.scrollIntoView({behavior:'smooth'}); }
+    if (e.key === 'h' || e.key === 'H') { window.scrollTo({top:0,behavior:'smooth'}); }
+    if (e.key === 't') document.getElementById('backToTop')?.click();
+  });
+
+  overlay.addEventListener('click', e => { if (e.target === overlay) closePalette(); });
+  closeBtn?.addEventListener('click', closePalette);
+})();
+
+/* --- #6 Sticky year navigator ----------------------------- */
+(function () {
+  const nav = document.getElementById('yearNav');
+  const pubSection = document.getElementById('publications');
+  if (!nav || !pubSection) return;
+
+  function buildNav() {
+    const years = [...new Set(
+      Array.from(document.querySelectorAll('.pub-year-heading')).map(h => h.dataset.year || h.textContent.trim())
+    )].sort((a,b) => b - a);
+    if (!years.length) return;
+
+    nav.innerHTML = '';
+    years.forEach(year => {
+      const item = document.createElement('div');
+      item.className = 'year-nav-item';
+      item.innerHTML = `<span class="year-nav-label">${year}</span><div class="year-nav-dot"></div>`;
+      item.addEventListener('click', () => {
+        const heading = Array.from(document.querySelectorAll('.pub-year-heading')).find(h => h.textContent.includes(year));
+        heading?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+      item.dataset.year = year;
+      nav.appendChild(item);
+    });
+  }
+
+  const pubObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      nav.classList.toggle('visible', e.isIntersecting);
+    });
+  }, { threshold: 0.05 });
+  pubObs.observe(pubSection);
+
+  function updateActive() {
+    const headings = Array.from(document.querySelectorAll('.pub-year-heading'));
+    let active = null;
+    for (const h of headings) {
+      const rect = h.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.4) active = h.dataset.year || h.textContent.trim();
+    }
+    if (!active) return;
+    nav.querySelectorAll('.year-nav-item').forEach(item => {
+      item.classList.toggle('active', item.dataset.year === active);
+    });
+  }
+
+  window.addEventListener('scroll', updateActive, { passive: true });
+  setTimeout(buildNav, 800);
+})();
+
+/* --- #7 Share button -------------------------------------- */
+(function () {
+  const btn = document.getElementById('shareBtn');
+  if (!btn) return;
+  btn.addEventListener('click', async () => {
+    const data = {
+      title: 'Dr. Arulmurugan Ramu — Research Profile',
+      text: 'Check out Dr. Ramu\'s academic research profile — 125+ publications, 1800+ citations in AI/ML.',
+      url: window.location.href,
+    };
+    if (navigator.share) {
+      try { await navigator.share(data); } catch (_) {}
+    } else {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        btn.title = 'Link copied!';
+        btn.style.background = 'var(--teal)';
+        btn.style.color = '#fff';
+        setTimeout(() => {
+          btn.title = 'Share this page';
+          btn.style.background = '';
+          btn.style.color = '';
+        }, 2000);
+      });
+    }
+  });
+})();
+
+/* --- #8 Print CV button ----------------------------------- */
+(function () {
+  const btn = document.getElementById('printBtn');
+  if (!btn) return;
+  btn.addEventListener('click', () => window.print());
+})();
+
+/* --- #11 Semantic Scholar most-cited papers feed ---------- */
+(function () {
+  const list = document.getElementById('ssFeedList');
+  if (!list) return;
+
+  const KNOWN_DOIS = [
+    '10.1038/s41598-025-25075-4',
+    '10.3390/diagnostics11101801',
+    '10.3390/s21113786',
+  ];
+
+  Promise.all(KNOWN_DOIS.map(doi =>
+    fetch(`https://api.semanticscholar.org/graph/v1/paper/DOI:${doi}?fields=title,citationCount,venue,year,externalIds`)
+      .then(r => r.json())
+      .catch(() => null)
+  )).then(papers => {
+    const valid = papers.filter(p => p && p.title);
+    if (!valid.length) return;
+    valid.sort((a, b) => (b.citationCount || 0) - (a.citationCount || 0));
+
+    list.innerHTML = '';
+    valid.forEach((p, i) => {
+      const doi = p.externalIds?.DOI || '';
+      const url = doi ? `https://doi.org/${doi}` : '#';
+      list.innerHTML += `
+        <div class="ss-paper">
+          <div class="ss-rank">${i + 1}</div>
+          <div class="ss-body">
+            <div class="ss-title"><a href="${url}" target="_blank" rel="noopener">${p.title}</a></div>
+            <div class="ss-venue">${p.venue || 'Journal/Conference'} · ${p.year || ''}</div>
+            <div class="ss-cite">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+              ${p.citationCount ?? '—'} citations
+            </div>
+          </div>
+        </div>`;
+    });
+  });
+})();
+
+/* --- #13 Aurora blobs — show after load ------------------- */
+(function () {
+  const hero = document.querySelector('.hero');
+  if (!hero) return;
+  hero.classList.add('aurora-loaded');
+})();
+
+/* --- #14 Scroll-snap toggle ------------------------------- */
+(function () {
+  const btn = document.getElementById('snapBtn');
+  if (!btn) return;
+  let active = false;
+  btn.addEventListener('click', () => {
+    active = !active;
+    document.documentElement.classList.toggle('snap-mode', active);
+    btn.classList.toggle('active', active);
+    btn.title = active ? 'Disable scroll snap' : 'Enable scroll snap';
+  });
+})();
+
+/* --- #15 Dark mode transition animation ------------------- */
+(function () {
+  const toggle = document.getElementById('darkToggle');
+  if (!toggle) return;
+  toggle.addEventListener('click', () => {
+    document.documentElement.classList.add('theme-transitioning');
+    setTimeout(() => document.documentElement.classList.remove('theme-transitioning'), 600);
+  }, true); // capture: true — runs before existing handler
+})();
