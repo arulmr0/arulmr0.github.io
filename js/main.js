@@ -927,7 +927,7 @@ if ('IntersectionObserver' in window) {
   if (!statGrid) return;
   const el = document.createElement('div');
   el.className = 'stat-item';
-  el.innerHTML = '<span class="stat-number" data-target="131" data-suffix="">0</span><span class="stat-label">Papers Reviewed</span>';
+  el.innerHTML = '<span class="stat-number">131</span><span class="stat-label">Papers Reviewed</span>';
   statGrid.appendChild(el);
 })();
 
