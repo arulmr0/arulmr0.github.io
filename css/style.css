@@ -2886,7 +2886,7 @@ body:hover #cursorDot { opacity: .75; }
 }
 .aurora-loaded .aurora-blob { opacity: 1; }
 /* Keep canvas above aurora blobs */
-#heroCanvas { position: relative; z-index: 1; opacity: .35; }
+#heroCanvas { position: absolute; z-index: 1; opacity: .35; }
 
 /* --- #14 Scroll-snap toggle ------------------------------- */
 /* Applied only when .snap-mode class is on <html> */
