@@ -2936,3 +2936,18 @@ html.theme-transitioning * {
     fill 200ms ease,
     box-shadow 200ms ease !important;
 }
+
+/* --- Publications collapsed preview mode ------------------ */
+.pub-more {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 28px;
+}
+.pub-show-more-btn {
+  min-width: 220px;
+}
+.pub-list.pub-preview .pub-item.pub-extra {
+  display: none !important;
+}

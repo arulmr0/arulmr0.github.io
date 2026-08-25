@@ -1117,3 +1117,56 @@ if ('IntersectionObserver' in window) {
     setTimeout(() => document.documentElement.classList.remove('theme-transitioning'), 600);
   }, true); // capture: true — runs before existing handler
 })();
+
+/* --- Publications collapsed preview (show 8 by default) --- */
+(function () {
+  const list = document.getElementById('pubList');
+  const btn  = document.getElementById('pubShowMore');
+  if (!list || !btn) return;
+
+  const LIMIT = 8;
+  let expanded = false;
+
+  function markExtras() {
+    // Mark items beyond LIMIT as extra (respects current filter visibility)
+    const visible = Array.from(list.querySelectorAll('.pub-item'))
+      .filter(el => !el.classList.contains('pub-hidden'));
+    visible.forEach((el, i) => {
+      el.classList.toggle('pub-extra', i >= LIMIT);
+    });
+    const hasExtra = visible.length > LIMIT;
+    btn.style.display = hasExtra && !expanded ? '' : (expanded ? '' : 'none');
+    btn.textContent   = expanded
+      ? `Show fewer publications ↑`
+      : `Show all ${visible.length} publications ↓`;
+  }
+
+  function setExpanded(val) {
+    expanded = val;
+    list.classList.toggle('pub-preview', !expanded);
+    markExtras();
+    if (!expanded) {
+      // Scroll back to top of publications section smoothly
+      document.getElementById('publications')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  btn.addEventListener('click', () => setExpanded(!expanded));
+
+  // Init: collapsed by default
+  list.classList.add('pub-preview');
+  markExtras();
+  btn.style.display = '';
+
+  // Re-run after filter changes (patch applyFilter)
+  const orig = window.applyFilter;
+  if (typeof orig === 'function') {
+    window.applyFilter = function (...args) {
+      orig(...args);
+      // After filter applies, re-evaluate extras
+      setTimeout(() => {
+        if (!expanded) markExtras();
+      }, 50);
+    };
+  }
+})();
