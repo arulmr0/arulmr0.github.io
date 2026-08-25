@@ -647,3 +647,223 @@ if ('IntersectionObserver' in window) {
     links.appendChild(wrap);
   });
 })();
+
+/* ============================================================
+   INNOVATIVE FEATURES 1, 5, 6, 7, 8, 9, 10
+   ============================================================ */
+
+/* --- #10 Particle color reacts to dark/light theme -------- */
+(function () {
+  const canvas = document.getElementById('heroCanvas');
+  if (!canvas) return;
+  const origApply = window._applyTheme || null;
+})();
+
+/* --- #1 AI Research Chatbot ------------------------------- */
+(function () {
+  const fab      = document.getElementById('chatFab');
+  const panel    = document.getElementById('chatPanel');
+  const closeBtn = document.getElementById('chatClose');
+  const form     = document.getElementById('chatForm');
+  const input    = document.getElementById('chatInput');
+  const msgs     = document.getElementById('chatMessages');
+  const suggests = document.querySelectorAll('.chat-suggest');
+  if (!fab) return;
+
+  const KB = [
+    {
+      patterns: ['research area', 'topic', 'interest', 'work on', 'speciali'],
+      reply: 'My core research areas are: Artificial Intelligence, Machine Learning, Deep Learning, Computer Vision, Healthcare AI, Natural Language Processing, IoT, and Blockchain. I focus on applying these to solve real-world problems — particularly in healthcare diagnostics, smart city traffic, and vehicular network security.'
+    },
+    {
+      patterns: ['phd', 'doctoral', 'supervise', 'supervision', 'student'],
+      reply: 'Yes! I accept 1-2 PhD students per year. Current open areas include AI/ML for healthcare, traffic prediction, and edge computing. To apply, email arulmr@gmail.com with your CV, research proposal, and academic transcripts. Funding opportunities may be available.'
+    },
+    {
+      patterns: ['collaborat', 'joint', 'partner', 'co-author', 'work with'],
+      reply: 'I welcome international academic collaborations! I have active co-authors across Asia, Africa, and Europe. To propose a collaboration, email arulmr@gmail.com with your institution, research interest, and a brief proposal. I especially welcome joint grant applications and dataset-sharing projects.'
+    },
+    {
+      patterns: ['publication', 'paper', 'journal', 'book', 'article', 'published'],
+      reply: 'I have 125+ publications including journals (Scientific Reports, Mobile Networks & Applications), books (Springer, Apple Academic Press), and conference papers. My most recent is a 2025 Nature Scientific Reports paper on traffic prediction using dual adjacency graphs. See the Publications section or visit my Google Scholar profile.'
+    },
+    {
+      patterns: ['citation', 'impact', 'h-index', 'scopus', 'scholar'],
+      reply: 'I have 1,800+ citations on Google Scholar. You can view my full profile at: scholar.google.com/citations?user=vGGhoQ8AAAAJ or my Scopus profile at authorId=56996013100.'
+    },
+    {
+      patterns: ['contact', 'email', 'reach', 'message', 'get in touch'],
+      reply: 'You can reach me at arulmr@gmail.com. I am based at Heriot-Watt University, Aktobe Campus, Kazakhstan. For collaboration or PhD enquiries, please include your CV and a brief description of your proposal. I typically respond within 2 business days.'
+    },
+    {
+      patterns: ['teach', 'course', 'lecture', 'class', 'module'],
+      reply: 'I teach courses including Artificial Intelligence, Machine Learning, Deep Learning, Computer Vision, Data Structures & Algorithms, and IoT at both undergraduate and postgraduate levels at Heriot-Watt University, Aktobe Campus.'
+    },
+    {
+      patterns: ['keynote', 'talk', 'speaker', 'conference', 'invited'],
+      reply: 'I am an invited keynote speaker at ICRTT 2026 (International Conference on Recent Trends in Technology). I also participate in international conferences and workshops on AI, ML, and related topics.'
+    },
+    {
+      patterns: ['heriot', 'university', 'aktobe', 'kazakhstan', 'hwu'],
+      reply: 'I am an Associate Professor in the Department of Computational Science and Software Engineering at Heriot-Watt University, Aktobe Campus, Kazakhstan. Heriot-Watt is a Scottish university with global campuses.'
+    },
+    {
+      patterns: ['healthcare', 'medical', 'cancer', 'lung', 'clinical'],
+      reply: 'Healthcare AI is a major focus of my research. Key papers include early lung cancer detection using neural networks (2018), neuroimaging techniques review (2024), and ML applications in biomedical signal processing. I am open to collaborations with medical institutions on AI diagnostic tools.'
+    },
+    {
+      patterns: ['hello', 'hi ', 'hey', 'who are you', 'what can you'],
+      reply: 'Hi there! I am Dr. Ramu\'s research assistant. I can answer questions about his publications, research areas, PhD supervision, collaboration opportunities, and contact details. What would you like to know?'
+    },
+  ];
+
+  function respond(text) {
+    const q = text.toLowerCase();
+    const match = KB.find(entry => entry.patterns.some(p => q.includes(p)));
+    return match
+      ? match.reply
+      : 'Great question! For specific details, please email Dr. Ramu directly at arulmr@gmail.com. You can also explore the Publications, Research, and Contact sections of this website.';
+  }
+
+  function addMsg(text, role) {
+    const div = document.createElement('div');
+    div.className = 'chat-msg ' + role;
+    div.textContent = text;
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  function sendQ(q) {
+    if (!q.trim()) return;
+    addMsg(q, 'user');
+    input.value = '';
+    setTimeout(() => addMsg(respond(q), 'bot'), 480);
+  }
+
+  fab.addEventListener('click', () => {
+    panel.hidden = !panel.hidden;
+    if (!panel.hidden) input.focus();
+  });
+  closeBtn.addEventListener('click', () => { panel.hidden = true; });
+  form.addEventListener('submit', e => { e.preventDefault(); sendQ(input.value); });
+  suggests.forEach(btn => btn.addEventListener('click', () => sendQ(btn.textContent)));
+})();
+
+/* --- #5 Story Timeline Scroll Reveal ---------------------- */
+(function () {
+  const items = document.querySelectorAll('.story-item');
+  if (!items.length) return;
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+  }, { threshold: 0.2 });
+  items.forEach(el => obs.observe(el));
+})();
+
+/* --- #7 Animated Topic Wheel SVG -------------------------- */
+(function () {
+  const svg = document.getElementById('topicWheel');
+  if (!svg) return;
+
+  const topics = [
+    { label: 'Machine\nLearning',  count: 45, color: '#0e7490' },
+    { label: 'Deep\nLearning',     count: 30, color: '#0891b2' },
+    { label: 'Healthcare\nAI',     count: 22, color: '#c06a18' },
+    { label: 'Computer\nVision',   count: 18, color: '#d97c1e' },
+    { label: 'IoT',                count: 15, color: '#0e6e82' },
+    { label: 'NLP',                count: 12, color: '#b5601a' },
+    { label: 'Blockchain',         count: 10, color: '#1a6ea0' },
+    { label: 'Big Data',           count: 8,  color: '#e08520' },
+  ];
+
+  const ns = 'http://www.w3.org/2000/svg';
+  const CX = 260, CY = 260, R_OUTER = 200, R_INNER = 70;
+  const total = topics.reduce((s, t) => s + t.count, 0);
+  let startAngle = -Math.PI / 2;
+
+  topics.forEach((topic, i) => {
+    const slice = (topic.count / total) * 2 * Math.PI;
+    const endAngle = startAngle + slice;
+    const mid = startAngle + slice / 2;
+    const r = R_INNER + (R_OUTER - R_INNER) * 0.55;
+
+    const x1o = CX + R_OUTER * Math.cos(startAngle);
+    const y1o = CY + R_OUTER * Math.sin(startAngle);
+    const x2o = CX + R_OUTER * Math.cos(endAngle);
+    const y2o = CY + R_OUTER * Math.sin(endAngle);
+    const x1i = CX + R_INNER * Math.cos(endAngle);
+    const y1i = CY + R_INNER * Math.sin(endAngle);
+    const x2i = CX + R_INNER * Math.cos(startAngle);
+    const y2i = CY + R_INNER * Math.sin(startAngle);
+    const largeArc = slice > Math.PI ? 1 : 0;
+
+    const path = document.createElementNS(ns, 'path');
+    path.setAttribute('class', 'wheel-slice');
+    path.setAttribute('d', `M${x1o},${y1o} A${R_OUTER},${R_OUTER} 0 ${largeArc} 1 ${x2o},${y2o} L${x1i},${y1i} A${R_INNER},${R_INNER} 0 ${largeArc} 0 ${x2i},${y2i} Z`);
+    path.setAttribute('fill', topic.color);
+    path.setAttribute('stroke', 'white');
+    path.setAttribute('stroke-width', '2');
+    path.setAttribute('data-topic', topic.label.replace('\n', ' '));
+
+    path.addEventListener('click', () => {
+      const topicName = topic.label.replace('\n', ' ').trim();
+      const tagBtn = Array.from(document.querySelectorAll('.tag-filter-btn')).find(b => b.dataset.topic && topicName.includes(b.dataset.topic.split(' ')[0]));
+      if (tagBtn) tagBtn.click();
+    });
+
+    const lx = CX + r * Math.cos(mid);
+    const ly = CY + r * Math.sin(mid);
+
+    const lines = topic.label.split('\n');
+    const tEl = document.createElementNS(ns, 'text');
+    tEl.setAttribute('class', 'wheel-label');
+    tEl.setAttribute('x', lx);
+    tEl.setAttribute('y', ly - (lines.length > 1 ? 7 : 0));
+    tEl.setAttribute('pointer-events', 'none');
+    lines.forEach((line, li) => {
+      const ts = document.createElementNS(ns, 'tspan');
+      ts.setAttribute('x', lx);
+      ts.setAttribute('dy', li === 0 ? '0' : '14');
+      ts.textContent = line;
+      tEl.appendChild(ts);
+    });
+
+    const cEl = document.createElementNS(ns, 'text');
+    cEl.setAttribute('class', 'wheel-count');
+    cEl.setAttribute('x', lx);
+    cEl.setAttribute('y', ly + (lines.length > 1 ? 20 : 14));
+    cEl.setAttribute('pointer-events', 'none');
+    cEl.textContent = topic.count + ' pubs';
+
+    svg.appendChild(path);
+    svg.appendChild(tEl);
+    svg.appendChild(cEl);
+
+    startAngle = endAngle;
+  });
+
+  const cCircle = document.createElementNS(ns, 'circle');
+  cCircle.setAttribute('cx', CX); cCircle.setAttribute('cy', CY); cCircle.setAttribute('r', R_INNER - 2);
+  cCircle.setAttribute('fill', 'var(--surface)'); cCircle.setAttribute('stroke', 'var(--border)'); cCircle.setAttribute('stroke-width', '1.5');
+  svg.appendChild(cCircle);
+
+  const cText = document.createElementNS(ns, 'text');
+  cText.setAttribute('class', 'wheel-center');
+  cText.setAttribute('x', CX); cText.setAttribute('y', CY - 6);
+  cText.textContent = '125+';
+  const cSub = document.createElementNS(ns, 'text');
+  cSub.setAttribute('x', CX); cSub.setAttribute('y', CY + 12);
+  cSub.setAttribute('font-size', '10'); cSub.setAttribute('text-anchor', 'middle');
+  cSub.setAttribute('fill', 'var(--text-3)'); cSub.textContent = 'papers';
+  svg.appendChild(cText);
+  svg.appendChild(cSub);
+})();
+
+/* --- #8 Paper Spotlight — fetch citation count ------------ */
+(function () {
+  const el = document.getElementById('spotCite');
+  if (!el) return;
+  fetch('https://api.semanticscholar.org/graph/v1/paper/DOI:10.1038/s41598-025-25075-4?fields=citationCount')
+    .then(r => r.json())
+    .then(d => { if (d.citationCount !== undefined) el.textContent = d.citationCount; })
+    .catch(() => { el.textContent = '—'; });
+})();
