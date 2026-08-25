@@ -1053,8 +1053,8 @@ if ('IntersectionObserver' in window) {
 
   const KNOWN_DOIS = [
     '10.1038/s41598-025-25075-4',
-    '10.3390/diagnostics11101801',
-    '10.3390/s21113786',
+    '10.53759/7669/jmc202404020',
+    '10.4018/979-8-3373-0265-2',
   ];
 
   Promise.all(KNOWN_DOIS.map(doi =>
