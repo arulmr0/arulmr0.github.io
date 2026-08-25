@@ -432,3 +432,218 @@ if ('IntersectionObserver' in window) {
   }
   loop();
 })();
+
+/* ============================================================
+   FEATURES 8вЂ“12
+   ============================================================ */
+
+/* --- #12 Reading progress bar ----------------------------- */
+(function () {
+  const bar = document.getElementById('readingProgress');
+  if (!bar) return;
+  window.addEventListener('scroll', () => {
+    const doc = document.documentElement;
+    const pct = (doc.scrollTop / (doc.scrollHeight - doc.clientHeight)) * 100;
+    bar.style.width = Math.min(pct, 100) + '%';
+  }, { passive: true });
+})();
+
+/* --- #8 Hero tag cloud -> publication filter --------------- */
+(function () {
+  const tagBtns = document.querySelectorAll('.tag-filter-btn');
+  if (!tagBtns.length) return;
+
+  const TOPIC_KEYWORDS = {
+    'Artificial Intelligence': ['artificial intelligence', 'intelligent system', 'ai'],
+    'Machine Learning':        ['machine learning', 'classification', 'prediction', 'neural network', 'gradient boosting'],
+    'Deep Learning':           ['deep learning', 'cnn', 'convolutional', 'lstm', 'transformer'],
+    'Computer Vision':         ['computer vision', 'image', 'traffic', 'visual', 'spatial'],
+    'Healthcare AI':           ['lung cancer', 'neuroimaging', 'healthcare', 'biomedical', 'clinical'],
+    'NLP':                     ['nlp', 'natural language', 'text', 'language'],
+    'IoT':                     ['iot', 'internet of things', 'sensor', 'urban'],
+    'Blockchain':              ['blockchain', 'vehicular', 'vanet', 'trust management'],
+    'Big Data':                ['big data', 'cognitive computing', 'data science'],
+  };
+
+  function clearTopicFilter() {
+    tagBtns.forEach(b => b.classList.remove('active-tag'));
+    pubList.querySelectorAll('.pub-item').forEach(el => el.classList.remove('hidden'));
+    pubList.querySelectorAll('.pub-year-heading').forEach(el => el.style.display = '');
+  }
+
+  tagBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const topic = btn.dataset.topic;
+      if (btn.classList.contains('active-tag')) {
+        clearTopicFilter();
+        return;
+      }
+      tagBtns.forEach(b => b.classList.remove('active-tag'));
+      btn.classList.add('active-tag');
+
+      const keywords = TOPIC_KEYWORDS[topic] || [topic.toLowerCase()];
+      pubList.querySelectorAll('.pub-item').forEach(item => {
+        const text = item.textContent.toLowerCase();
+        item.classList.toggle('hidden', !keywords.some(k => text.includes(k)));
+      });
+      pubList.querySelectorAll('.pub-year-heading').forEach(h => {
+        let next = h.nextElementSibling;
+        let anyVisible = false;
+        while (next && !next.classList.contains('pub-year-heading')) {
+          if (!next.classList.contains('hidden')) { anyVisible = true; break; }
+          next = next.nextElementSibling;
+        }
+        h.style.display = anyVisible ? '' : 'none';
+      });
+
+      const pubSec = document.getElementById('publications');
+      if (pubSec) pubSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+})();
+
+/* --- #9 Timeline / Grid view toggle ----------------------- */
+(function () {
+  const gridBtn     = document.getElementById('viewGrid');
+  const timelineBtn = document.getElementById('viewTimeline');
+  if (!gridBtn || !timelineBtn) return;
+
+  timelineBtn.addEventListener('click', () => {
+    pubList.classList.add('timeline-view');
+    timelineBtn.classList.add('active'); timelineBtn.setAttribute('aria-pressed', 'true');
+    gridBtn.classList.remove('active'); gridBtn.setAttribute('aria-pressed', 'false');
+  });
+  gridBtn.addEventListener('click', () => {
+    pubList.classList.remove('timeline-view');
+    gridBtn.classList.add('active'); gridBtn.setAttribute('aria-pressed', 'true');
+    timelineBtn.classList.remove('active'); timelineBtn.setAttribute('aria-pressed', 'false');
+  });
+})();
+
+/* --- #10 Co-author network SVG ---------------------------- */
+(function () {
+  const svg = document.getElementById('coauthorSvg');
+  if (!svg) return;
+
+  const CENTER = { x: 350, y: 190 };
+  const coauthors = [
+    { name: 'A. Haldorai',        count: 18, angle: 0   },
+    { name: 'S. K. Ravichandran', count: 8,  angle: 45  },
+    { name: 'D. Vetrithangam',    count: 6,  angle: 90  },
+    { name: 'T. D. Adugna',       count: 5,  angle: 135 },
+    { name: 'R. Venkatesh',       count: 4,  angle: 180 },
+    { name: 'Puneet Kumar',       count: 4,  angle: 225 },
+    { name: 'S. A. R. Khan',      count: 3,  angle: 270 },
+    { name: 'Suriya Murugan',     count: 3,  angle: 315 },
+  ];
+
+  const ns = 'http://www.w3.org/2000/svg';
+  function mkEl(tag, attrs) {
+    const e = document.createElementNS(ns, tag);
+    Object.entries(attrs).forEach(([k, v]) => e.setAttribute(k, v));
+    return e;
+  }
+
+  const RADIUS = 138;
+  coauthors.forEach((node, i) => {
+    const angle = (node.angle * Math.PI) / 180;
+    const x = CENTER.x + RADIUS * Math.cos(angle);
+    const y = CENTER.y + RADIUS * Math.sin(angle);
+
+    svg.appendChild(mkEl('line', {
+      class: 'coauthor-edge',
+      x1: CENTER.x, y1: CENTER.y, x2: x, y2: y,
+      'stroke-width': Math.max(1, node.count * 0.25),
+    }));
+
+    const r = Math.max(10, Math.min(22, node.count * 1.2));
+    svg.appendChild(mkEl('circle', {
+      class: 'node-circle',
+      cx: x, cy: y, r,
+      fill: 'hsl(' + (185 + i * 20) + ',52%,' + (40 + i * 2) + '%)',
+      stroke: 'white', 'stroke-width': 2,
+    }));
+
+    const lbl = mkEl('text', { class: 'node-label', x, y: y + r + 13 });
+    lbl.textContent = node.name.split(' ').slice(-1)[0];
+    svg.appendChild(lbl);
+  });
+
+  svg.appendChild(mkEl('circle', {
+    class: 'node-circle center-node',
+    cx: CENTER.x, cy: CENTER.y, r: 32,
+    stroke: 'white', 'stroke-width': 3,
+  }));
+  const cl = mkEl('text', { class: 'node-label', x: CENTER.x, y: CENTER.y + 5 });
+  cl.textContent = 'Ramu';
+  cl.setAttribute('font-weight', '700');
+  cl.setAttribute('fill', '#fff');
+  cl.setAttribute('font-size', '13');
+  svg.appendChild(cl);
+  const cl2 = mkEl('text', { class: 'node-label', x: CENTER.x, y: CENTER.y + 19 });
+  cl2.textContent = '125+ pubs';
+  cl2.setAttribute('font-size', '9');
+  cl2.setAttribute('fill', 'rgba(255,255,255,.7)');
+  svg.appendChild(cl2);
+})();
+
+/* --- #11 Copy citation (APA / MLA / IEEE) ----------------- */
+(function () {
+  function buildCitations(article) {
+    const titleEl = article.querySelector('.pub-title a') || article.querySelector('.pub-title');
+    const title   = titleEl ? titleEl.textContent.trim() : '';
+    const authors = article.querySelector('.pub-authors')?.textContent.trim() || '';
+    const venueEl = article.querySelector('.pub-venue em');
+    const venue   = venueEl ? venueEl.textContent.trim() : '';
+    const year    = article.dataset.year || '';
+    const doiEl   = article.querySelector('a[href*="doi.org"]');
+    const doi     = doiEl ? doiEl.href : '';
+
+    return {
+      apa:  authors + ' (' + year + '). ' + title + '. ' + venue + '. ' + (doi || ''),
+      mla:  authors + '. "' + title + '." ' + venue + ', ' + year + '. ' + (doi || ''),
+      ieee: authors + ', "' + title + '," ' + venue + ', ' + year + '. ' + (doi ? 'Available: ' + doi : ''),
+    };
+  }
+
+  document.querySelectorAll('.pub-item').forEach(article => {
+    const links = article.querySelector('.pub-links');
+    if (!links) return;
+
+    const wrap    = document.createElement('div');
+    wrap.className = 'pub-link cite-btn';
+
+    const mainBtn = document.createElement('button');
+    mainBtn.className = 'pub-link';
+    mainBtn.textContent = 'Cite';
+    mainBtn.style.cssText = 'border:1px solid var(--border-2);border-radius:4px;padding:3px 10px;font-size:.75rem;cursor:pointer;background:none;font-family:var(--font);color:var(--text-2);';
+
+    const menu = document.createElement('div');
+    menu.className = 'cite-menu';
+
+    ['APA', 'MLA', 'IEEE'].forEach(fmt => {
+      const btn = document.createElement('button');
+      btn.textContent = 'Copy ' + fmt;
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        const cites = buildCitations(article);
+        navigator.clipboard.writeText(cites[fmt.toLowerCase()]).then(() => {
+          btn.textContent = 'Copied!';
+          setTimeout(() => { btn.textContent = 'Copy ' + fmt; }, 1800);
+        });
+        wrap.classList.remove('open');
+      });
+      menu.appendChild(btn);
+    });
+
+    mainBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      wrap.classList.toggle('open');
+    });
+    document.addEventListener('click', () => wrap.classList.remove('open'), { passive: true });
+
+    wrap.appendChild(mainBtn);
+    wrap.appendChild(menu);
+    links.appendChild(wrap);
+  });
+})();

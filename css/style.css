@@ -1490,3 +1490,221 @@ body:hover #cursorDot { opacity: .75; }
 @media (pointer: coarse) {
   #cursorDot { display: none; }
 }
+
+/* ============================================================
+   FEATURES 8–12
+   ============================================================ */
+
+/* --- #12 Reading progress bar ----------------------------- */
+#readingProgress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--teal), var(--amber-mid));
+  z-index: 10000;
+  transition: width 80ms linear;
+  border-radius: 0 2px 2px 0;
+  pointer-events: none;
+}
+
+/* --- #8 Hero tag filter buttons --------------------------- */
+.tag-filter-btn {
+  background: none;
+  border: none;
+  font-family: var(--font);
+  cursor: pointer;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+}
+.tag-filter-btn:hover,
+.tag-filter-btn.active-tag {
+  background: var(--amber-mid);
+  color: #fff;
+  border-color: var(--amber-mid);
+}
+.tag-filter-btn.active-tag {
+  box-shadow: 0 0 0 2px rgba(192,106,24,.35);
+}
+
+/* --- #9 Publications toolbar ------------------------------ */
+.pub-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 0;
+}
+
+.pub-view-toggle {
+  display: flex;
+  gap: 4px;
+  background: var(--paper);
+  padding: 3px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--border);
+}
+[data-theme="dark"] .pub-view-toggle {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+.view-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px; height: 32px;
+  background: none;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--text-3);
+  transition: all var(--t);
+}
+.view-btn.active,
+.view-btn:hover {
+  background: var(--surface);
+  color: var(--teal);
+  box-shadow: var(--sh-sm);
+}
+[data-theme="dark"] .view-btn.active {
+  background: var(--deep);
+}
+
+/* --- #9 Timeline view ------------------------------------- */
+#pubList.timeline-view {
+  position: relative;
+  padding-left: 48px;
+}
+#pubList.timeline-view::before {
+  content: '';
+  position: absolute;
+  left: 18px; top: 0; bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--teal), var(--amber-mid), transparent);
+  border-radius: 1px;
+}
+#pubList.timeline-view .pub-year-heading {
+  position: relative;
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--teal);
+  background: var(--cream);
+  padding: 2px 10px 2px 0;
+  margin: 32px 0 12px -48px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+[data-theme="dark"] #pubList.timeline-view .pub-year-heading {
+  background: var(--cream);
+}
+#pubList.timeline-view .pub-year-heading::before {
+  content: '';
+  display: inline-block;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--teal);
+  border: 2px solid var(--surface);
+  box-shadow: 0 0 0 2px var(--teal);
+  flex-shrink: 0;
+}
+#pubList.timeline-view .pub-item {
+  position: relative;
+  margin-bottom: 14px;
+  border-left: 2px solid var(--border);
+  border-radius: 0 var(--r) var(--r) 0;
+  padding-left: 18px;
+}
+#pubList.timeline-view .pub-item::before {
+  content: '';
+  position: absolute;
+  left: -7px; top: 20px;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--amber-mid);
+  border: 2px solid var(--surface);
+}
+
+/* --- #10 Co-author network -------------------------------- */
+.coauthor-network-wrap {
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--sh);
+}
+[data-theme="dark"] .coauthor-network-wrap {
+  background: var(--surface);
+  border-color: var(--border);
+}
+.coauthor-svg {
+  width: 100%;
+  max-width: 700px;
+  height: auto;
+  display: block;
+}
+.node-label {
+  font-family: var(--font);
+  font-size: 11px;
+  fill: var(--text-2);
+  pointer-events: none;
+  text-anchor: middle;
+}
+.node-circle {
+  cursor: default;
+  transition: r 200ms ease;
+}
+.node-circle.center-node {
+  fill: var(--teal);
+}
+.coauthor-edge {
+  stroke: var(--border-2);
+  stroke-width: 1.2;
+  opacity: .6;
+}
+
+/* --- #11 Citation copy button ----------------------------- */
+.cite-btn {
+  position: relative;
+}
+.cite-menu {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 6px);
+  right: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  box-shadow: var(--sh-lg);
+  z-index: 50;
+  min-width: 130px;
+  overflow: hidden;
+}
+.cite-btn.open .cite-menu { display: block; }
+.cite-menu button {
+  display: block;
+  width: 100%;
+  padding: 9px 14px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font);
+  font-size: .8rem;
+  color: var(--text-2);
+  text-align: left;
+  transition: background var(--t);
+}
+.cite-menu button:hover {
+  background: var(--paper);
+  color: var(--text-1);
+}
+[data-theme="dark"] .cite-menu button:hover {
+  background: var(--deep);
+}

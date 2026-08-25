@@ -19,6 +19,7 @@
 </head>
 <body>
 <div id="cursorDot" aria-hidden="true"></div>
+<div id="readingProgress" aria-hidden="true"></div>
 
   <!-- Navigation -->
   <header class="site-header" id="top">
@@ -38,6 +39,7 @@
         <li><a href="#teaching">Teaching</a></li>
         <li><a href="#editorial">Editorial</a></li>
         <li><a href="#team">Team</a></li>
+        <li><a href="#coauthors">Network</a></li>
         <li><a href="#talks">Talks</a></li>
         <li><a href="#news">News</a></li>
         <li><a href="#contact" class="btn-nav">Contact</a></li>
@@ -68,13 +70,16 @@
           I lead the <strong>AI &amp; Intelligent Systems Lab</strong> and collaborate with
           international research groups across academia and industry.
         </p>
-        <div class="hero-interests">
-          <span class="tag">Artificial Intelligence</span>
-          <span class="tag">Machine Learning</span>
-          <span class="tag">Deep Learning</span>
-          <span class="tag">Computer Vision</span>
-          <span class="tag">Healthcare AI</span>
-          <span class="tag">NLP</span>
+        <div class="hero-interests" id="heroTags">
+          <button class="tag tag-filter-btn" data-topic="Artificial Intelligence">Artificial Intelligence</button>
+          <button class="tag tag-filter-btn" data-topic="Machine Learning">Machine Learning</button>
+          <button class="tag tag-filter-btn" data-topic="Deep Learning">Deep Learning</button>
+          <button class="tag tag-filter-btn" data-topic="Computer Vision">Computer Vision</button>
+          <button class="tag tag-filter-btn" data-topic="Healthcare AI">Healthcare AI</button>
+          <button class="tag tag-filter-btn" data-topic="NLP">NLP</button>
+          <button class="tag tag-filter-btn" data-topic="IoT">IoT</button>
+          <button class="tag tag-filter-btn" data-topic="Blockchain">Blockchain</button>
+          <button class="tag tag-filter-btn" data-topic="Big Data">Big Data</button>
         </div>
         <div class="hero-links">
           <a href="mailto:arulmr@gmail.com" class="btn btn-primary">
@@ -229,12 +234,22 @@
         <input type="search" id="pubSearch" class="pub-search" placeholder="Search publications by title or author…" aria-label="Search publications" />
       </div>
 
-      <div class="pub-filters" role="group" aria-label="Filter publications">
-        <button class="pub-filter active" data-filter="all">All</button>
-        <button class="pub-filter" data-filter="journal">Journals</button>
-        <button class="pub-filter" data-filter="book">Books</button>
-        <button class="pub-filter" data-filter="chapter">Chapters</button>
-        <button class="pub-filter" data-filter="conference">Conference</button>
+      <div class="pub-toolbar">
+        <div class="pub-filters" role="group" aria-label="Filter publications">
+          <button class="pub-filter active" data-filter="all">All</button>
+          <button class="pub-filter" data-filter="journal">Journals</button>
+          <button class="pub-filter" data-filter="book">Books</button>
+          <button class="pub-filter" data-filter="chapter">Chapters</button>
+          <button class="pub-filter" data-filter="conference">Conference</button>
+        </div>
+        <div class="pub-view-toggle" role="group" aria-label="View mode">
+          <button class="view-btn active" id="viewGrid" title="Grid view" aria-pressed="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
+          </button>
+          <button class="view-btn" id="viewTimeline" title="Timeline view" aria-pressed="false">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="2" width="14" height="2" rx="1"/><rect x="1" y="7" width="14" height="2" rx="1"/><rect x="1" y="12" width="14" height="2" rx="1"/></svg>
+          </button>
+        </div>
       </div>
 
       <div class="pub-list" id="pubList">
@@ -750,6 +765,19 @@ Advances in Computing, Communication, Automation and Biomedical Technology
 
       <div class="pub-more">
         <a href="https://scholar.google.com/citations?user=vGGhoQ8AAAAJ&hl=en" class="btn btn-outline" target="_blank" rel="noopener">View all 125+ publications on Google Scholar</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Co-author Network -->
+  <section class="section section-alt" id="coauthors">
+    <div class="container">
+      <div class="section-header">
+        <h2>Collaboration Network</h2>
+        <p>Most frequent co-authors across 125+ publications.</p>
+      </div>
+      <div class="coauthor-network-wrap">
+        <svg id="coauthorSvg" class="coauthor-svg" viewBox="0 0 700 380" aria-label="Co-author collaboration network"></svg>
       </div>
     </div>
   </section>
