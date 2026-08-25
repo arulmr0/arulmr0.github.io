@@ -252,11 +252,11 @@ if (typewriterEl) {
 }
 
 /* --- #8 Live citations from Semantic Scholar -------------- */
-fetch('https://api.semanticscholar.org/graph/v1/author/search?query=Arulmurugan+Ramu+Heriot-Watt&fields=citationCount,paperCount&limit=1')
+fetch('https://api.semanticscholar.org/graph/v1/author/1388122739?fields=citationCount,paperCount')
   .then(r => r.json())
   .then(data => {
-    const author = data.data?.[0];
-    if (!author) return;
+    const author = data;
+    if (!author || !author.citationCount) return;
     document.querySelectorAll('.stat-number').forEach(el => {
       const label = el.nextElementSibling?.textContent?.toLowerCase() || '';
       if (label.includes('citation') && author.citationCount > 0)
@@ -883,14 +883,13 @@ if ('IntersectionObserver' in window) {
   statGrid.appendChild(el);
 
   const hEl = document.getElementById('hIdxNum');
-  fetch('https://api.semanticscholar.org/graph/v1/author/search?query=Arulmurugan+Ramu&fields=hIndex,citationCount')
+  fetch('https://api.semanticscholar.org/graph/v1/author/1388122739?fields=hIndex,citationCount')
     .then(r => r.json())
     .then(d => {
-      const author = (d.data || []).find(a => a.hIndex > 0);
-      const hIdx = (author && author.hIndex > 0) ? author.hIndex : 6;
-      hEl.textContent = hIdx;
+      if (d.hIndex > 0) hEl.textContent = d.hIndex;
+      else hEl.textContent = 15;
     })
-    .catch(() => { hEl.textContent = 6; });
+    .catch(() => { hEl.textContent = 15; });
 })();
 
 /* --- #2 Journal IF badges --------------------------------- */
@@ -1191,12 +1190,11 @@ if ('IntersectionObserver' in window) {
     requestAnimationFrame(tick);
   }
 
-  fetch('https://api.semanticscholar.org/graph/v1/author/search?query=Arulmurugan+Ramu&fields=hIndex,citationCount')
+  fetch('https://api.semanticscholar.org/graph/v1/author/1388122739?fields=hIndex,citationCount')
     .then(r => r.json())
     .then(d => {
-      const author = (d.data || []).find(a => a.citationCount && a.citationCount > 500);
-      if (!author) return;
-      const live = author.citationCount;
+      if (!d || !d.citationCount) return;
+      const live = d.citationCount;
       // Animate from current displayed value to live value
       animateCount(1800, live, '+');
       if (badge) badge.style.display = '';
