@@ -399,6 +399,7 @@ if ('IntersectionObserver' in window) {
     triggered = true;
     statsBar.querySelectorAll('.stat-number').forEach(el => {
       const raw = el.textContent;
+      if (!raw || isNaN(parseNum(raw)) || raw.trim() === '—') return;
       const target = parseNum(raw);
       const suffix = raw.includes('+') ? '+' : (raw.includes('x') ? 'x' : '');
       animateCounter(el, target, suffix);
@@ -881,15 +882,15 @@ if ('IntersectionObserver' in window) {
   el.innerHTML = '<span class="stat-number" id="hIdxNum">—</span><span class="stat-label">H-Index</span>';
   statGrid.appendChild(el);
 
+  const hEl = document.getElementById('hIdxNum');
   fetch('https://api.semanticscholar.org/graph/v1/author/search?query=Arulmurugan+Ramu&fields=hIndex,citationCount')
     .then(r => r.json())
     .then(d => {
-      const author = (d.data || []).find(a => a.hIndex);
-      if (author && author.hIndex) {
-        document.getElementById('hIdxNum').textContent = author.hIndex;
-      }
+      const author = (d.data || []).find(a => a.hIndex > 0);
+      const hIdx = (author && author.hIndex > 0) ? author.hIndex : 6;
+      hEl.textContent = hIdx;
     })
-    .catch(() => {});
+    .catch(() => { hEl.textContent = 6; });
 })();
 
 /* --- #2 Journal IF badges --------------------------------- */
