@@ -1128,7 +1128,6 @@ if ('IntersectionObserver' in window) {
   let expanded = false;
 
   function markExtras() {
-    // Mark items beyond LIMIT as extra (respects current filter visibility)
     const visible = Array.from(list.querySelectorAll('.pub-item'))
       .filter(el => !el.classList.contains('pub-hidden'));
     visible.forEach((el, i) => {
@@ -1139,6 +1138,21 @@ if ('IntersectionObserver' in window) {
     btn.textContent   = expanded
       ? `Show fewer publications ↑`
       : `Show all ${visible.length} publications ↓`;
+
+    // Hide year headings that have no visible (non-extra) pub under them
+    list.querySelectorAll('.pub-year-heading').forEach(heading => {
+      let next = heading.nextElementSibling;
+      let hasVisible = false;
+      while (next && !next.classList.contains('pub-year-heading')) {
+        if (next.classList.contains('pub-item') &&
+            !next.classList.contains('pub-hidden') &&
+            !next.classList.contains('pub-extra')) {
+          hasVisible = true; break;
+        }
+        next = next.nextElementSibling;
+      }
+      heading.style.display = hasVisible ? '' : 'none';
+    });
   }
 
   function setExpanded(val) {
