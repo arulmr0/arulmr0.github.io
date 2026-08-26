@@ -514,14 +514,14 @@ if ('IntersectionObserver' in window) {
     timelineBtn.classList.add('active'); timelineBtn.setAttribute('aria-pressed', 'true');
     gridBtn.classList.remove('active'); gridBtn.setAttribute('aria-pressed', 'false');
     // Expand all pubs in timeline view so no year section is empty
-    setExpanded(true);
+    window.setPubExpanded?.(true);
   });
   gridBtn.addEventListener('click', () => {
     pubList.classList.remove('timeline-view');
     gridBtn.classList.add('active'); gridBtn.setAttribute('aria-pressed', 'true');
     timelineBtn.classList.remove('active'); timelineBtn.setAttribute('aria-pressed', 'false');
     // Collapse back to short list and re-apply heading visibility
-    setExpanded(false);
+    window.setPubExpanded?.(false);
   });
 })();
 
@@ -1171,6 +1171,7 @@ if ('IntersectionObserver' in window) {
   }
 
   btn.addEventListener('click', () => setExpanded(!expanded));
+  window.setPubExpanded = setExpanded; // expose for timeline toggle
 
   // Init: collapsed by default
   list.classList.add('pub-preview');
