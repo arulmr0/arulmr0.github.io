@@ -1143,7 +1143,9 @@ if ('IntersectionObserver' in window) {
       ? `Show fewer publications ↑`
       : `Show all ${visible.length} publications ↓`;
 
-    // Hide year headings that have no visible (non-extra) pub under them (skip in timeline view)
+    // Hide year headings that have no visible pub under them
+    // In expanded state: only hide if all pubs are filtered (pub-hidden)
+    // In collapsed state: hide if all pubs are filtered or extra (pub-extra)
     if (list.classList.contains('timeline-view')) return;
     list.querySelectorAll('.pub-year-heading').forEach(heading => {
       let next = heading.nextElementSibling;
@@ -1151,7 +1153,7 @@ if ('IntersectionObserver' in window) {
       while (next && !next.classList.contains('pub-year-heading')) {
         if (next.classList.contains('pub-item') &&
             !next.classList.contains('pub-hidden') &&
-            !next.classList.contains('pub-extra')) {
+            (expanded || !next.classList.contains('pub-extra'))) {
           hasVisible = true; break;
         }
         next = next.nextElementSibling;
