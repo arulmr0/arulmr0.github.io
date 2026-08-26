@@ -657,19 +657,14 @@ ul { list-style: none; }
 }
 .pub-link:hover { color: var(--teal-light); border-bottom-style: solid; }
 
-/* Year group heading (All view) */
+/* Year group heading — invisible anchor only (no visual label) */
 .pub-year-heading {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 1.65rem;
-  font-weight: 400;
-  color: var(--text-1);
-  border-left: 3px solid var(--amber-mid);
-  padding: 4px 18px;
-  margin: 48px 0 8px;
-  letter-spacing: -0.015em;
-  background: rgba(217,124,30,.04);
-  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  height: 0;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
 }
 
 .pub-more { text-align: center; margin-top: 48px; }
@@ -1116,7 +1111,7 @@ ul { list-style: none; }
 [data-theme="dark"] .contact-form { background: var(--surface); border-color: var(--border); }
 [data-theme="dark"] .pub-search   { background: var(--surface); color: var(--text-1); border-color: var(--border); }
 [data-theme="dark"] .join-card    { background: var(--surface); }
-[data-theme="dark"] .pub-year-heading { color: var(--text-3); }
+[data-theme="dark"] .pub-year-heading { color: transparent; }
 
 /* Dark mode toggle button */
 .dark-toggle {
