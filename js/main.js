@@ -513,15 +513,15 @@ if ('IntersectionObserver' in window) {
     pubList.classList.add('timeline-view');
     timelineBtn.classList.add('active'); timelineBtn.setAttribute('aria-pressed', 'true');
     gridBtn.classList.remove('active'); gridBtn.setAttribute('aria-pressed', 'false');
-    // Show all year headings in timeline view (override inline display:none from markExtras)
-    pubList.querySelectorAll('.pub-year-heading').forEach(h => h.style.display = '');
+    // Expand all pubs in timeline view so no year section is empty
+    setExpanded(true);
   });
   gridBtn.addEventListener('click', () => {
     pubList.classList.remove('timeline-view');
     gridBtn.classList.add('active'); gridBtn.setAttribute('aria-pressed', 'true');
     timelineBtn.classList.remove('active'); timelineBtn.setAttribute('aria-pressed', 'false');
-    // Re-apply heading visibility based on collapsed/expanded state
-    markExtras();
+    // Collapse back to short list and re-apply heading visibility
+    setExpanded(false);
   });
 })();
 
