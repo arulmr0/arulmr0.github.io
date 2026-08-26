@@ -513,11 +513,15 @@ if ('IntersectionObserver' in window) {
     pubList.classList.add('timeline-view');
     timelineBtn.classList.add('active'); timelineBtn.setAttribute('aria-pressed', 'true');
     gridBtn.classList.remove('active'); gridBtn.setAttribute('aria-pressed', 'false');
+    // Show all year headings in timeline view (override inline display:none from markExtras)
+    pubList.querySelectorAll('.pub-year-heading').forEach(h => h.style.display = '');
   });
   gridBtn.addEventListener('click', () => {
     pubList.classList.remove('timeline-view');
     gridBtn.classList.add('active'); gridBtn.setAttribute('aria-pressed', 'true');
     timelineBtn.classList.remove('active'); timelineBtn.setAttribute('aria-pressed', 'false');
+    // Re-apply heading visibility based on collapsed/expanded state
+    markExtras();
   });
 })();
 
@@ -1139,7 +1143,8 @@ if ('IntersectionObserver' in window) {
       ? `Show fewer publications ↑`
       : `Show all ${visible.length} publications ↓`;
 
-    // Hide year headings that have no visible (non-extra) pub under them
+    // Hide year headings that have no visible (non-extra) pub under them (skip in timeline view)
+    if (list.classList.contains('timeline-view')) return;
     list.querySelectorAll('.pub-year-heading').forEach(heading => {
       let next = heading.nextElementSibling;
       let hasVisible = false;
