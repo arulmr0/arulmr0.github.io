@@ -266,25 +266,7 @@ fetch('https://api.semanticscholar.org/graph/v1/author/1388122739?fields=citatio
     });
   }).catch(() => {});
 
-/* --- Smooth reveal on scroll (Intersection Observer) ------ */
-if ('IntersectionObserver' in window) {
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.style.opacity = '1';
-        entry.target.style.transform = 'translateY(0)';
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1 });
-
-  document.querySelectorAll('.research-card, .course-card, .team-card, .news-item').forEach(el => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = 'opacity 400ms ease, transform 400ms ease';
-    observer.observe(el);
-  });
-}
+/* Scroll reveal handled by #2 staggered system below */
 
 /* ============================================================
    VISUAL EFFECTS 1–7
@@ -358,18 +340,20 @@ if ('IntersectionObserver' in window) {
 
 /* --- #2 Staggered scroll reveal --------------------------- */
 (function () {
-  const targets = document.querySelectorAll(
+  // Add reveal class to card-style elements that don't already have it
+  const autoReveal = document.querySelectorAll(
     '.research-card, .course-card, .team-card, .news-item, .talk-card, .stat-item, .editorial-role'
   );
-  targets.forEach(el => el.classList.add('reveal'));
+  autoReveal.forEach(el => el.classList.add('reveal'));
 
+  // Watch ALL .reveal elements (including those with it set directly in HTML)
   const obs = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
     });
-  }, { threshold: 0.12 });
+  }, { threshold: 0.08 });
 
-  targets.forEach(el => obs.observe(el));
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 })();
 
 /* --- #5 Animated stat counters ---------------------------- */
