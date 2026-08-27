@@ -1338,43 +1338,65 @@ Advances in Computing, Communication, Automation and Biomedical Technology
       <div class="impact-map-wrap reveal">
         <svg class="impact-map-svg" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg" aria-label="World map showing research collaborations">
           <rect class="map-ocean" width="800" height="400" rx="12"/>
-          <path class="map-land" d="M80,45 L230,42 L240,75 L255,110 L235,155 L205,175 L160,175 L125,155 L90,140 L70,105 L75,70 Z"/>
-          <path class="map-land" d="M150,185 L210,182 L225,220 L230,265 L210,320 L175,345 L145,330 L130,285 L135,230 L140,200 Z"/>
-          <path class="map-land" d="M340,40 L440,38 L450,65 L445,95 L420,110 L370,115 L340,95 L335,65 Z"/>
-          <path class="map-land" d="M355,120 L465,118 L475,165 L480,230 L455,305 L415,325 L380,320 L355,275 L348,210 L350,160 Z"/>
-          <path class="map-land" d="M430,20 L730,18 L735,65 L700,90 L650,100 L580,95 L480,90 L440,75 L430,45 Z"/>
-          <path class="map-land" d="M450,105 L540,102 L548,145 L520,160 L450,155 Z"/>
-          <path class="map-land" d="M530,105 L640,100 L660,140 L650,185 L610,210 L570,215 L540,185 L525,150 Z"/>
-          <path class="map-land" d="M640,105 L695,102 L710,145 L700,175 L670,180 L645,155 L638,130 Z"/>
-          <path class="map-land" d="M615,225 L710,222 L718,275 L695,305 L650,310 L615,285 Z"/>
-          <path class="map-land" d="M700,82 L715,80 L720,98 L706,100 Z"/>
-          <path class="map-land" d="M245,10 L295,8 L300,40 L265,50 L242,35 Z"/>
-          <!-- Kazakhstan (home) -->
-          <circle class="map-dot-home" cx="557" cy="88" r="6"><animate attributeName="r" values="6;10;6" dur="2.5s" repeatCount="indefinite"/></circle>
-          <circle class="map-ripple map-ripple-home" cx="557" cy="88" r="6" opacity="0"><animate attributeName="r" values="6;22;22" dur="2.5s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.8;0;0" dur="2.5s" repeatCount="indefinite"/></circle>
-          <text class="map-label" x="557" y="107">Kazakhstan</text>
-          <!-- India -->
-          <circle class="map-dot" cx="578" cy="152" r="5"><animate attributeName="r" values="5;8;5" dur="3s" begin="0.5s" repeatCount="indefinite"/></circle>
-          <circle class="map-ripple" cx="578" cy="152" r="5" opacity="0"><animate attributeName="r" values="5;18;18" dur="3s" begin="0.5s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.7;0;0" dur="3s" begin="0.5s" repeatCount="indefinite"/></circle>
-          <text class="map-label" x="578" y="170">India</text>
-          <!-- UK -->
-          <circle class="map-dot" cx="373" cy="68" r="5"><animate attributeName="r" values="5;8;5" dur="3.5s" begin="1s" repeatCount="indefinite"/></circle>
-          <circle class="map-ripple" cx="373" cy="68" r="5" opacity="0"><animate attributeName="r" values="5;18;18" dur="3.5s" begin="1s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.7;0;0" dur="3.5s" begin="1s" repeatCount="indefinite"/></circle>
-          <text class="map-label" x="373" y="57">UK</text>
-          <!-- USA -->
-          <circle class="map-dot" cx="175" cy="118" r="5"><animate attributeName="r" values="5;8;5" dur="4s" begin="1.5s" repeatCount="indefinite"/></circle>
-          <circle class="map-ripple" cx="175" cy="118" r="5" opacity="0"><animate attributeName="r" values="5;18;18" dur="4s" begin="1.5s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.7;0;0" dur="4s" begin="1.5s" repeatCount="indefinite"/></circle>
-          <text class="map-label" x="175" y="137">USA</text>
-          <!-- Ethiopia -->
-          <circle class="map-dot" cx="468" cy="182" r="5"><animate attributeName="r" values="5;8;5" dur="3.2s" begin="2s" repeatCount="indefinite"/></circle>
-          <circle class="map-ripple" cx="468" cy="182" r="5" opacity="0"><animate attributeName="r" values="5;18;18" dur="3.2s" begin="2s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.7;0;0" dur="3.2s" begin="2s" repeatCount="indefinite"/></circle>
-          <text class="map-label" x="468" y="170">Ethiopia</text>
-          <!-- Germany -->
-          <circle class="map-dot" cx="415" cy="72" r="4"><animate attributeName="r" values="4;7;4" dur="3.8s" begin="0.8s" repeatCount="indefinite"/></circle>
-          <text class="map-label" x="415" y="61">Germany</text>
-          <!-- China -->
-          <circle class="map-dot" cx="640" cy="118" r="5"><animate attributeName="r" values="5;8;5" dur="2.8s" begin="1.2s" repeatCount="indefinite"/></circle>
-          <text class="map-label" x="640" y="137">China</text>
+          <!-- Equirectangular projection: x=(lon+180)*(800/360), y=(90-lat)*(400/180) -->
+          <!-- North America -->
+          <path class="map-land" d="M70,30 L148,20 L192,24 L235,32 L254,52 L260,74 L254,106 L242,133 L226,152 L210,168 L198,180 L180,193 L166,200 L148,207 L132,202 L116,195 L102,182 L90,165 L80,140 L74,112 L68,84 L66,55 Z"/>
+          <!-- Greenland -->
+          <path class="map-land" d="M237,10 L282,5 L298,22 L292,42 L268,52 L240,46 L228,28 Z"/>
+          <!-- South America -->
+          <path class="map-land" d="M192,216 L234,208 L262,222 L274,254 L278,294 L274,334 L258,362 L236,378 L210,375 L186,352 L173,318 L171,280 L177,250 L184,230 Z"/>
+          <!-- Europe (W+C+Balkans) -->
+          <path class="map-land" d="M334,58 L348,48 L364,42 L382,38 L404,36 L428,38 L448,44 L464,58 L468,72 L462,86 L448,94 L428,98 L408,98 L386,92 L366,82 L350,70 Z"/>
+          <!-- Scandinavia -->
+          <path class="map-land" d="M384,22 L410,16 L430,20 L442,32 L436,46 L420,50 L404,46 L386,36 Z"/>
+          <!-- British Isles -->
+          <path class="map-land" d="M374,68 L400,65 L410,73 L406,86 L392,91 L374,86 L367,76 Z"/>
+          <!-- Africa (with Horn) -->
+          <path class="map-land" d="M352,118 L394,110 L428,112 L456,118 L476,132 L490,153 L500,178 L498,208 L488,244 L472,278 L454,306 L434,326 L410,338 L384,342 L360,334 L340,310 L328,278 L326,240 L328,202 L335,164 L344,138 Z"/>
+          <!-- Madagascar -->
+          <path class="map-land" d="M492,248 L502,242 L512,256 L514,280 L504,296 L490,286 L484,268 Z"/>
+          <!-- Arabian Peninsula -->
+          <path class="map-land" d="M452,118 L496,112 L520,118 L530,136 L526,160 L508,176 L482,180 L456,167 L446,150 L448,130 Z"/>
+          <!-- Asia main (Russia+Central Asia — bottom reaches Kazakhstan lat≈41-52) -->
+          <path class="map-land" d="M462,22 L546,15 L626,17 L706,20 L752,28 L764,48 L757,68 L742,82 L715,94 L683,98 L651,94 L622,90 L592,88 L562,92 L534,98 L508,90 L486,82 L466,68 L460,47 Z"/>
+          <!-- Indian Subcontinent -->
+          <path class="map-land" d="M537,106 L579,100 L612,113 L624,143 L614,176 L593,202 L566,207 L540,191 L526,161 L528,130 Z"/>
+          <!-- Southeast Asia / Indochina -->
+          <path class="map-land" d="M622,120 L664,115 L690,123 L708,141 L710,163 L695,179 L668,183 L644,172 L627,155 L618,138 Z"/>
+          <!-- China / East Asia -->
+          <path class="map-land" d="M578,79 L640,72 L694,75 L730,89 L748,113 L740,137 L716,150 L684,153 L654,146 L627,130 L603,114 L580,97 Z"/>
+          <!-- Japan -->
+          <path class="map-land" d="M720,76 L736,70 L745,81 L740,95 L725,98 L713,88 Z"/>
+          <!-- Australia -->
+          <path class="map-land" d="M636,272 L706,264 L745,276 L762,303 L755,333 L733,352 L700,358 L664,350 L638,325 L629,298 L632,278 Z"/>
+          <!-- New Zealand -->
+          <path class="map-land" d="M758,322 L769,316 L778,330 L770,350 L756,344 Z"/>
+          <!-- Kazakhstan (home): lon=67,lat=48 → x=549,y=93 -->
+          <circle class="map-dot-home" cx="549" cy="93" r="6"><animate attributeName="r" values="6;10;6" dur="2.5s" repeatCount="indefinite"/></circle>
+          <circle class="map-ripple map-ripple-home" cx="549" cy="93" r="6" opacity="0"><animate attributeName="r" values="6;22;22" dur="2.5s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.8;0;0" dur="2.5s" repeatCount="indefinite"/></circle>
+          <text class="map-label" x="549" y="112">Kazakhstan</text>
+          <!-- India: lon=79,lat=22 → x=575,y=151 -->
+          <circle class="map-dot" cx="575" cy="151" r="5"><animate attributeName="r" values="5;8;5" dur="3s" begin="0.5s" repeatCount="indefinite"/></circle>
+          <circle class="map-ripple" cx="575" cy="151" r="5" opacity="0"><animate attributeName="r" values="5;18;18" dur="3s" begin="0.5s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.7;0;0" dur="3s" begin="0.5s" repeatCount="indefinite"/></circle>
+          <text class="map-label" x="575" y="168">India</text>
+          <!-- UK: lon=-2,lat=52 → x=396,y=84 -->
+          <circle class="map-dot" cx="396" cy="84" r="5"><animate attributeName="r" values="5;8;5" dur="3.5s" begin="1s" repeatCount="indefinite"/></circle>
+          <circle class="map-ripple" cx="396" cy="84" r="5" opacity="0"><animate attributeName="r" values="5;18;18" dur="3.5s" begin="1s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.7;0;0" dur="3.5s" begin="1s" repeatCount="indefinite"/></circle>
+          <text class="map-label" x="396" y="73">UK</text>
+          <!-- USA: lon=-100,lat=38 → x=178,y=116 -->
+          <circle class="map-dot" cx="178" cy="116" r="5"><animate attributeName="r" values="5;8;5" dur="4s" begin="1.5s" repeatCount="indefinite"/></circle>
+          <circle class="map-ripple" cx="178" cy="116" r="5" opacity="0"><animate attributeName="r" values="5;18;18" dur="4s" begin="1.5s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.7;0;0" dur="4s" begin="1.5s" repeatCount="indefinite"/></circle>
+          <text class="map-label" x="178" y="135">USA</text>
+          <!-- Ethiopia: lon=40,lat=9 → x=489,y=180 -->
+          <circle class="map-dot" cx="489" cy="180" r="5"><animate attributeName="r" values="5;8;5" dur="3.2s" begin="2s" repeatCount="indefinite"/></circle>
+          <circle class="map-ripple" cx="489" cy="180" r="5" opacity="0"><animate attributeName="r" values="5;18;18" dur="3.2s" begin="2s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.7;0;0" dur="3.2s" begin="2s" repeatCount="indefinite"/></circle>
+          <text class="map-label" x="489" y="168">Ethiopia</text>
+          <!-- Germany: lon=10,lat=51 → x=422,y=87 -->
+          <circle class="map-dot" cx="422" cy="87" r="4"><animate attributeName="r" values="4;7;4" dur="3.8s" begin="0.8s" repeatCount="indefinite"/></circle>
+          <text class="map-label" x="422" y="76">Germany</text>
+          <!-- China: lon=105,lat=35 → x=633,y=122 -->
+          <circle class="map-dot" cx="633" cy="122" r="5"><animate attributeName="r" values="5;8;5" dur="2.8s" begin="1.2s" repeatCount="indefinite"/></circle>
+          <text class="map-label" x="633" y="141">China</text>
         </svg>
         <div class="map-legend">
           <div class="map-legend-item"><div class="map-legend-dot" style="background:var(--teal)"></div>Home institution (Kazakhstan)</div>
@@ -1491,6 +1513,6 @@ Advances in Computing, Communication, Automation and Biomedical Technology
   <!-- GoatCounter analytics — sign up at goatcounter.com and replace YOUR-SITE-CODE -->
   <!-- <script data-goatcounter="https://YOUR-SITE-CODE.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script> -->
 
-  <script src="js/main.js?v=20260827b"></script>
+  <script src="js/main.js?v=20260827c"></script>
 </body>
 </html>
