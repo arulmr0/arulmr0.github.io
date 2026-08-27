@@ -1338,39 +1338,54 @@ Advances in Computing, Communication, Automation and Biomedical Technology
       <div class="impact-map-wrap reveal">
         <svg class="impact-map-svg" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg" aria-label="World map showing research collaborations">
           <rect class="map-ocean" width="800" height="400" rx="12"/>
-          <!-- Equirectangular projection: x=(lon+180)*(800/360), y=(90-lat)*(400/180) -->
-          <!-- North America -->
-          <path class="map-land" d="M70,30 L148,20 L192,24 L235,32 L254,52 L260,74 L254,106 L242,133 L226,152 L210,168 L198,180 L180,193 L166,200 L148,207 L132,202 L116,195 L102,182 L90,165 L80,140 L74,112 L68,84 L66,55 Z"/>
+          <!-- Equirectangular: x=(lon+180)*(800/360)  y=(90-lat)*(400/180) -->
+
+          <!-- North America: Alaska → Arctic Canada → E coast → Gulf → Central Am → Pacific → back -->
+          <path class="map-land" d="M27,53 L40,40 L90,36 L178,36 L218,36 L256,60 L282,96 L260,102 L244,107 L231,118 L233,122 L220,133 L220,144 L200,156 L216,167 L222,180 L213,180 L198,167 L169,158 L156,149 L140,129 L124,102 L124,93 L111,80 L67,73 L44,71 L38,80 Z"/>
+
           <!-- Greenland -->
-          <path class="map-land" d="M237,10 L282,5 L298,22 L292,42 L268,52 L240,46 L228,28 Z"/>
-          <!-- South America -->
-          <path class="map-land" d="M192,216 L234,208 L262,222 L274,254 L278,294 L274,334 L258,362 L236,378 L210,375 L186,352 L173,318 L171,280 L177,250 L184,230 Z"/>
-          <!-- Europe (W+C+Balkans) -->
-          <path class="map-land" d="M334,58 L348,48 L364,42 L382,38 L404,36 L428,38 L448,44 L464,58 L468,72 L462,86 L448,94 L428,98 L408,98 L386,92 L366,82 L350,70 Z"/>
-          <!-- Scandinavia -->
-          <path class="map-land" d="M384,22 L410,16 L430,20 L442,32 L436,46 L420,50 L404,46 L386,36 Z"/>
-          <!-- British Isles -->
-          <path class="map-land" d="M374,68 L400,65 L410,73 L406,86 L392,91 L374,86 L367,76 Z"/>
-          <!-- Africa (with Horn) -->
-          <path class="map-land" d="M352,118 L394,110 L428,112 L456,118 L476,132 L490,153 L500,178 L498,208 L488,244 L472,278 L454,306 L434,326 L410,338 L384,342 L360,334 L340,310 L328,278 L326,240 L328,202 L335,164 L344,138 Z"/>
+          <path class="map-land" d="M284,62 L302,69 L349,44 L333,18 L280,18 L280,44 Z"/>
+
+          <!-- South America: Colombia → Venezuela → NE Brazil → S tip → Chile → Ecuador -->
+          <path class="map-land" d="M229,196 L236,173 L262,176 L265,180 L322,189 L311,249 L284,273 L273,273 L258,293 L253,318 L249,322 L240,311 L240,289 L231,231 L222,202 Z"/>
+
+          <!-- Europe: Iberia → Med coast → Italy → Balkans → Black Sea N → Baltic → Channel → back -->
+          <path class="map-land" d="M380,102 L380,118 L389,120 L398,116 L404,113 L416,104 L424,100 L429,102 L436,116 L441,120 L451,118 L462,109 L473,98 L460,80 L447,71 L422,73 L411,82 L404,87 L391,96 L382,102 Z"/>
+
+          <!-- Scandinavia + Finland: S Norway → N tip → Finland → back -->
+          <path class="map-land" d="M411,71 L413,62 L424,51 L436,44 L462,42 L467,47 L467,62 L462,67 L440,69 L424,73 Z"/>
+
+          <!-- British Isles (England+Scotland+Wales) -->
+          <path class="map-land" d="M389,89 L396,85 L402,84 L399,76 L396,71 L388,71 L383,76 L378,82 L382,88 Z"/>
+
+          <!-- Ireland -->
+          <path class="map-land" d="M370,84 L378,80 L378,88 L371,91 Z"/>
+
+          <!-- Africa: Morocco → W coast → Gulf of Guinea → E → Horn → Red Sea → N coast → back -->
+          <path class="map-land" d="M387,120 L404,118 L424,118 L444,127 L469,131 L480,151 L493,167 L496,173 L513,173 L489,213 L480,233 L473,262 L440,278 L438,264 L427,249 L427,209 L420,191 L407,189 L393,189 L369,180 L362,167 L362,153 L387,120 Z"/>
+
           <!-- Madagascar -->
-          <path class="map-land" d="M492,248 L502,242 L512,256 L514,280 L504,296 L490,286 L484,268 Z"/>
-          <!-- Arabian Peninsula -->
-          <path class="map-land" d="M452,118 L496,112 L520,118 L530,136 L526,160 L508,176 L482,180 L456,167 L446,150 L448,130 Z"/>
-          <!-- Asia main (Russia+Central Asia — bottom reaches Kazakhstan lat≈41-52) -->
-          <path class="map-land" d="M462,22 L546,15 L626,17 L706,20 L752,28 L764,48 L757,68 L742,82 L715,94 L683,98 L651,94 L622,90 L592,88 L562,92 L534,98 L508,90 L486,82 L466,68 L460,47 Z"/>
+          <path class="map-land" d="M499,227 L511,237 L512,254 L501,258 L497,241 Z"/>
+
+          <!-- Arabian Peninsula: Turkey/Syria → Sinai → Red Sea → Yemen → Oman → Gulf → Iraq/Kuwait → back -->
+          <path class="map-land" d="M480,118 L493,127 L478,133 L484,147 L496,167 L500,171 L527,151 L529,147 L507,136 L504,133 L493,127 L480,118 Z"/>
+
+          <!-- Asia main: Russia (Finland → Arctic → Far East) + SE Asia coast, India separate -->
+          <path class="map-land" d="M462,44 L467,47 L533,38 L622,38 L711,38 L778,58 L756,84 L720,107 L711,116 L682,118 L653,151 L640,176 L629,198 L618,182 L618,160 L604,151 L533,147 L480,118 L473,98 L489,84 L471,78 Z"/>
+
           <!-- Indian Subcontinent -->
-          <path class="map-land" d="M537,106 L579,100 L612,113 L624,143 L614,176 L593,202 L566,207 L540,191 L526,161 L528,130 Z"/>
-          <!-- Southeast Asia / Indochina -->
-          <path class="map-land" d="M622,120 L664,115 L690,123 L708,141 L710,163 L695,179 L668,183 L644,172 L627,155 L618,138 Z"/>
-          <!-- China / East Asia -->
-          <path class="map-land" d="M578,79 L640,72 L694,75 L730,89 L748,113 L740,137 L716,150 L684,153 L654,146 L627,130 L603,114 L580,97 Z"/>
-          <!-- Japan -->
-          <path class="map-land" d="M720,76 L736,70 L745,81 L740,95 L725,98 L713,88 Z"/>
+          <path class="map-land" d="M604,151 L582,164 L578,178 L578,182 L568,182 L562,167 L556,155 L542,147 L533,147 L604,151 Z"/>
+
+          <!-- Japan: Honshu + Hokkaido simplified -->
+          <path class="map-land" d="M702,124 L709,118 L713,108 L713,98 L707,102 L703,114 L700,122 Z"/>
+
           <!-- Australia -->
-          <path class="map-land" d="M636,272 L706,264 L745,276 L762,303 L755,333 L733,352 L700,358 L664,350 L638,325 L629,298 L632,278 Z"/>
-          <!-- New Zealand -->
-          <path class="map-land" d="M758,322 L769,316 L778,330 L770,350 L756,344 Z"/>
+          <path class="map-land" d="M651,249 L672,227 L693,224 L722,222 L740,240 L743,262 L737,282 L716,286 L686,284 L658,271 L648,260 Z"/>
+
+          <!-- New Zealand (North Island) -->
+          <path class="map-land" d="M786,276 L793,283 L787,296 L780,289 Z"/>
+          <!-- New Zealand (South Island) -->
+          <path class="map-land" d="M779,296 L786,300 L784,315 L774,311 Z"/>
           <!-- Kazakhstan (home): lon=67,lat=48 → x=549,y=93 -->
           <circle class="map-dot-home" cx="549" cy="93" r="6"><animate attributeName="r" values="6;10;6" dur="2.5s" repeatCount="indefinite"/></circle>
           <circle class="map-ripple map-ripple-home" cx="549" cy="93" r="6" opacity="0"><animate attributeName="r" values="6;22;22" dur="2.5s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.8;0;0" dur="2.5s" repeatCount="indefinite"/></circle>
