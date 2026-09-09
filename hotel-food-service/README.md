@@ -39,24 +39,28 @@ docker compose exec api python -m app.seed
 
 The image runs anywhere Docker runs. Two zero-configuration routes are wired up:
 
-**Hugging Face Space (free, recommended for a demo)**
-1. Create a *write* token at https://huggingface.co/settings/tokens.
-2. In this GitHub repository open *Settings → Secrets and variables → Actions* and add
-   a secret named `HF_TOKEN` with that token.
-3. Run the *hotel-food-service deploy* workflow from the *Actions* tab (it also runs on
-   every push to `master` that touches this directory).
+**Render (free tier, recommended)**
+1. Open https://render.com/deploy?repo=https://github.com/arulmr0/arulmr0.github.io
+   and sign in with GitHub.
+2. Accept the blueprint from `render.yaml`. It builds the Dockerfile, generates
+   `HFS_SECRET_KEY`, enables demo data, and health-checks `/health`.
+3. After the first build (3 to 5 minutes) the app is live at
+   `https://hotel-food-service.onrender.com` (Render may add a suffix if the name is taken).
 
-The app appears at `https://huggingface.co/spaces/<your-username>/hotel-food-service`
-with the demo data loaded. Optional secrets: `HF_SPACE` to pick another Space name,
-`HFS_SECRET_KEY` to keep sessions valid across restarts.
+Free Render services sleep after 15 minutes without traffic; the first request afterwards
+takes about a minute to wake up.
 
-**Render (free tier)**
-Click https://render.com/deploy?repo=https://github.com/arulmr0/arulmr0.github.io and
-accept the blueprint in `render.yaml`.
+**Hugging Face Space (requires a PRO subscription)**
+Docker Spaces are no longer free on Hugging Face; the API answers HTTP 402 without PRO.
+If you have PRO: create a *write* token at https://huggingface.co/settings/tokens, add it
+as the GitHub Actions secret `HF_TOKEN`, and run the *hotel-food-service deploy* workflow.
+The app appears at `https://huggingface.co/spaces/<your-username>/hotel-food-service`.
+Optional secrets: `HF_SPACE` to pick another Space name, `HFS_SECRET_KEY` to keep sessions
+valid across restarts.
 
 **Important for real business use**: free tiers have no persistent disk, so the SQLite
 database is reset when the host restarts or redeploys. Before entering live data, either
-attach persistent storage (Hugging Face *persistent storage*, a Render *disk*, a Fly.io
+attach persistent storage (a Render *disk*, Hugging Face *persistent storage*, a Fly.io
 *volume*) and keep `HFS_DATABASE_URL` pointing at it, or set `HFS_DATABASE_URL` to a
 managed PostgreSQL instance. Also set `HFS_SEED_ON_START=false` once real data exists.
 

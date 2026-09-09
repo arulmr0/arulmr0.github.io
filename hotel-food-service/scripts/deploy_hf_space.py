@@ -14,6 +14,7 @@ import tempfile
 from pathlib import Path
 
 from huggingface_hub import HfApi
+from huggingface_hub.errors import HfHubHTTPError
 
 ROOT = Path(__file__).resolve().parent.parent
 SPACE_FRONT_MATTER = """---
@@ -45,7 +46,19 @@ def main() -> int:
         readme = staging / "README.md"
         readme.write_text(SPACE_FRONT_MATTER + readme.read_text())
 
-        api.create_repo(space, repo_type="space", space_sdk="docker", exist_ok=True)
+        try:
+            api.create_repo(space, repo_type="space", space_sdk="docker", exist_ok=True)
+        except HfHubHTTPError as exc:
+            if exc.response is not None and exc.response.status_code == 402:
+                print(
+                    "Hugging Face refused to create a Docker Space: hosting Docker Spaces "
+                    "requires a PRO subscription on this account (HTTP 402).\n"
+                    "Options: subscribe at https://huggingface.co/pro and re-run this "
+                    "workflow, or deploy to Render for free using the blueprint in "
+                    "render.yaml (see hotel-food-service/README.md, 'Deploy online')."
+                )
+                return 1
+            raise
         api.add_space_variable(space, "HFS_SEED_ON_START", "true")
         secret = os.environ.get("HFS_SECRET_KEY")
         if secret:
