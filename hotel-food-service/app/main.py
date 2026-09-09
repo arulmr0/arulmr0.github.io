@@ -105,7 +105,7 @@ def create_app() -> FastAPI:
         logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(name)s: %(message)s")
     app = FastAPI(
         title=settings.app_name,
-        version="0.1.0",
+        version="0.2.0",
         description="Procurement, inventory, menu, sales, HR, payroll and reporting "
         "for a hotel food-service operation.",
         lifespan=lifespan,
@@ -119,12 +119,22 @@ def create_app() -> FastAPI:
     def health(db: Session = Depends(get_db)) -> dict[str, str | bool]:
         return {
             "status": "ok",
+            "version": app.version,
             "currency": settings.currency,
             # True means no account exists yet; see HFS_ADMIN_EMAIL in the README.
             "setup_required": setup_required(db),
         }
 
     app.include_router(api_router)
+
+    @app.middleware("http")
+    async def _no_cache_for_client(request: Request, call_next):
+        """The single-page client must never be served stale after a deploy."""
+        response = await call_next(request)
+        path = request.url.path
+        if path == "/" or path.startswith("/static/"):
+            response.headers["Cache-Control"] = "no-cache, must-revalidate"
+        return response
 
     if WEB_DIR.exists():
 
