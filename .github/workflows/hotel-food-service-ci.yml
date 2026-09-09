@@ -36,8 +36,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: docker build -t hotel-food-service .
-      - name: Container boots and answers /health
+      - name: Container boots on a host-assigned port, seeds demo data, accepts login
         run: |
-          docker run -d --name hfs -p 8000:8000 hotel-food-service
-          for i in $(seq 1 20); do curl -fs localhost:8000/health && exit 0; sleep 1; done
-          docker logs hfs; exit 1
+          docker run -d --name hfs -e PORT=7860 -e HFS_SEED_ON_START=true -p 7860:7860 hotel-food-service
+          for i in $(seq 1 30); do curl -fs localhost:7860/health && break; sleep 1; done
+          curl -fs localhost:7860/health || { docker logs hfs; exit 1; }
+          curl -fs -X POST localhost:7860/api/v1/auth/login \
+            -d 'username=manager@example.com&password=Password123' | grep -q access_token \
+            || { docker logs hfs; exit 1; }

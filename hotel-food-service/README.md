@@ -35,6 +35,31 @@ docker compose up --build
 docker compose exec api python -m app.seed
 ```
 
+## Deploy online
+
+The image runs anywhere Docker runs. Two zero-configuration routes are wired up:
+
+**Hugging Face Space (free, recommended for a demo)**
+1. Create a *write* token at https://huggingface.co/settings/tokens.
+2. In this GitHub repository open *Settings → Secrets and variables → Actions* and add
+   a secret named `HF_TOKEN` with that token.
+3. Run the *hotel-food-service deploy* workflow from the *Actions* tab (it also runs on
+   every push to `master` that touches this directory).
+
+The app appears at `https://huggingface.co/spaces/<your-username>/hotel-food-service`
+with the demo data loaded. Optional secrets: `HF_SPACE` to pick another Space name,
+`HFS_SECRET_KEY` to keep sessions valid across restarts.
+
+**Render (free tier)**
+Click https://render.com/deploy?repo=https://github.com/arulmr0/arulmr0.github.io and
+accept the blueprint in `render.yaml`.
+
+**Important for real business use**: free tiers have no persistent disk, so the SQLite
+database is reset when the host restarts or redeploys. Before entering live data, either
+attach persistent storage (Hugging Face *persistent storage*, a Render *disk*, a Fly.io
+*volume*) and keep `HFS_DATABASE_URL` pointing at it, or set `HFS_DATABASE_URL` to a
+managed PostgreSQL instance. Also set `HFS_SEED_ON_START=false` once real data exists.
+
 ## Engineering
 
 ```bash

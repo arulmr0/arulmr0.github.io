@@ -8,16 +8,22 @@ from functools import lru_cache
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+DEV_SECRET_KEY = "dev-only-secret-change-me-before-going-live-0123456789"
+
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="HFS_", env_file=".env", extra="ignore")
 
     app_name: str = "Hotel Food Service"
     database_url: str = "sqlite:///./hfs.db"
-    secret_key: str = "dev-only-secret-change-me-before-going-live-0123456789"
+    secret_key: str = DEV_SECRET_KEY
     bcrypt_rounds: int = 12
     access_token_minutes: int = 480
     currency: str = "INR"
+
+    # Operations
+    # Load the demo dataset on first boot when the database is empty (one-click deploys).
+    seed_on_start: bool = False
 
     # Sales
     tax_rate_percent: float = 5.0
