@@ -13,3 +13,9 @@ services:
         value: "true"
       - key: HFS_CURRENCY
         value: INR
+      # First admin login for a real (non-demo) database. Set the e-mail in the Render
+      # dashboard; the password is generated and shown there.
+      - key: HFS_ADMIN_EMAIL
+        sync: false
+      - key: HFS_ADMIN_PASSWORD
+        generateValue: true

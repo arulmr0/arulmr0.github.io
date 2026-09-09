@@ -60,6 +60,12 @@ The app appears at `https://huggingface.co/spaces/<your-username>/hotel-food-ser
 Optional secrets: `HF_SPACE` to pick another Space name, `HFS_SECRET_KEY` to keep sessions
 valid across restarts.
 
+**First login on a real database**: demo accounts exist only while `HFS_SEED_ON_START`
+is `true`. For production set `HFS_ADMIN_EMAIL` and `HFS_ADMIN_PASSWORD`; the account is
+created at start-up if missing and is never modified afterwards. `GET /health` reports
+`"setup_required": true` whenever the database has no user at all. Admins manage staff
+accounts (create, role, enable/disable, password reset) on the *Users* page.
+
 **Important for real business use**: free tiers have no persistent disk, so the SQLite
 database is reset when the host restarts or redeploys. Before entering live data, either
 attach persistent storage (a Render *disk*, Hugging Face *persistent storage*, a Fly.io

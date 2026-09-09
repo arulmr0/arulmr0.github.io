@@ -718,6 +718,59 @@
     });
   };
 
+  views.users = async () => {
+    const rows = await api("/auth/users");
+    const roles = ["admin", "manager", "chef", "cashier", "storekeeper", "hr", "accountant"];
+    view.innerHTML = `
+      <h1>Users</h1>
+      <div class="card"><h2>Create user</h2>
+        <form id="f" class="inline">
+          <label>Email <input name="email" type="email" required></label>
+          <label>Full name <input name="full_name" required></label>
+          <label>Role <select name="role">${roles.map((r) => `<option>${r}</option>`).join("")}</select></label>
+          <label>Password (8+ chars) <input name="password" type="password" minlength="8" required></label>
+          <button>Create</button>
+        </form></div>
+      <div class="card">${table(
+        [
+          { label: "Email", render: (u) => esc(u.email) },
+          { label: "Name", render: (u) => esc(u.full_name) },
+          { label: "Role", render: (u) => `<select data-role="${u.id}">${roles.map((r) => `<option ${u.role === r ? "selected" : ""}>${r}</option>`).join("")}</select>` },
+          { label: "Status", render: (u) => (u.is_active ? "active" : '<span class="muted">disabled</span>') },
+          { label: "", render: (u) => `<div class="actions">
+              <button class="small secondary" data-action="role" data-id="${u.id}">Save role</button>
+              <button class="small ${u.is_active ? "danger" : ""}" data-action="toggle" data-id="${u.id}" data-active="${u.is_active}">${u.is_active ? "Disable" : "Enable"}</button>
+              <button class="small secondary" data-action="reset" data-id="${u.id}">Reset password</button></div>` },
+        ],
+        rows
+      )}
+      <p class="muted">Demo accounts use a public password. Once your own admin works, disable them here.</p></div>`;
+    onSubmit($("#f"), (d) => api("/auth/users", { method: "POST", body: d }));
+    onAction(view, {
+      role: (d) => api(`/auth/users/${d.id}`, { method: "PATCH", body: { role: $(`[data-role="${d.id}"]`).value } }),
+      toggle: (d) => api(`/auth/users/${d.id}`, { method: "PATCH", body: { is_active: d.active !== "true" } }),
+      reset: async (d) => {
+        const pw = prompt("New password (at least 8 characters):");
+        if (!pw) return;
+        await api(`/auth/users/${d.id}/reset-password`, { method: "POST", body: { new_password: pw } });
+        toast("Password reset");
+      },
+    });
+  };
+
+  async function changeOwnPassword() {
+    const current = prompt("Current password:");
+    if (!current) return;
+    const next = prompt("New password (at least 8 characters):");
+    if (!next) return;
+    try {
+      await api("/auth/change-password", { method: "POST", body: { current_password: current, new_password: next } });
+      toast("Password changed");
+    } catch (err) {
+      toast(err.message, true);
+    }
+  }
+
   // ---------- router ----------
   async function loadMe() {
     if (!localStorage.getItem("token")) return (me = null);
@@ -737,6 +790,7 @@
     nav.hidden = box.hidden = false;
     $("#user-name").textContent = me.full_name;
     $("#user-role").textContent = me.role;
+    $("#nav-users").hidden = me.role !== "admin";
     const route = location.hash.replace("#", "") || "dashboard";
     nav.querySelectorAll("a").forEach((a) => a.classList.toggle("active", a.getAttribute("href") === `#${route}`));
     const fn = views[route] || views.dashboard;
@@ -748,6 +802,7 @@
     }
   }
 
+  $("#change-pw").onclick = changeOwnPassword;
   $("#logout").onclick = () => {
     localStorage.removeItem("token");
     me = null;

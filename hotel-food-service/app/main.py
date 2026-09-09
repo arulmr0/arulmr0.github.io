@@ -5,13 +5,14 @@ import secrets
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-from fastapi import FastAPI, Request
+from fastapi import Depends, FastAPI, Request
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
+from sqlalchemy.orm import Session
 
 from app.api.v1.router import api_router
 from app.core.config import DEV_SECRET_KEY, Settings, get_settings
-from app.core.database import SessionLocal, engine
+from app.core.database import SessionLocal, engine, get_db
 from app.core.exceptions import DomainError
 from app.models import Base
 
@@ -32,6 +33,44 @@ def harden_secret_key(settings: Settings) -> bool:
     return True
 
 
+def bootstrap_admin(settings: Settings) -> bool:
+    """Create the configured admin account when it does not exist yet.
+
+    Returns True when an account was created. Never changes an existing account.
+    """
+    if not (settings.admin_email and settings.admin_password):
+        return False
+    from app.core.exceptions import ConflictError
+    from app.models.user import Role
+    from app.schemas.auth import UserCreate
+    from app.services.auth import create_user
+
+    with SessionLocal() as db:
+        try:
+            create_user(
+                db,
+                UserCreate(
+                    email=settings.admin_email,
+                    full_name="Administrator",
+                    password=settings.admin_password,
+                    role=Role.ADMIN,
+                ),
+            )
+        except ConflictError:
+            return False
+    log.info("Created admin account %s from HFS_ADMIN_EMAIL", settings.admin_email)
+    return True
+
+
+def setup_required(db: Session) -> bool:
+    """True when nobody can log in because the database has no user at all."""
+    from sqlalchemy import select
+
+    from app.models.user import User
+
+    return db.scalar(select(User.id).limit(1)) is None
+
+
 def seed_if_requested(settings: Settings) -> None:
     if not settings.seed_on_start:
         return
@@ -49,11 +88,21 @@ async def lifespan(_: FastAPI):
     harden_secret_key(settings)
     Base.metadata.create_all(bind=engine)
     seed_if_requested(settings)
+    bootstrap_admin(settings)
+    with SessionLocal() as db:
+        empty = setup_required(db)
+    if empty:
+        log.warning(
+            "The database has no users, so nobody can log in. Set HFS_ADMIN_EMAIL and "
+            "HFS_ADMIN_PASSWORD (or HFS_SEED_ON_START=true for demo data) and restart."
+        )
     yield
 
 
 def create_app() -> FastAPI:
     settings = get_settings()
+    if not logging.getLogger().handlers:  # uvicorn only configures its own loggers
+        logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(name)s: %(message)s")
     app = FastAPI(
         title=settings.app_name,
         version="0.1.0",
@@ -67,8 +116,13 @@ def create_app() -> FastAPI:
         return JSONResponse(status_code=exc.status_code, content={"detail": exc.message})
 
     @app.get("/health", tags=["system"])
-    def health() -> dict[str, str]:
-        return {"status": "ok", "currency": settings.currency}
+    def health(db: Session = Depends(get_db)) -> dict[str, str | bool]:
+        return {
+            "status": "ok",
+            "currency": settings.currency,
+            # True means no account exists yet; see HFS_ADMIN_EMAIL in the README.
+            "setup_required": setup_required(db),
+        }
 
     app.include_router(api_router)
 
