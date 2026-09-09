@@ -21,6 +21,11 @@ guest orders, managing staff attendance, and paying salaries.
 
 ### FR-1 Identity and access
 - FR-1.1 Users authenticate with email + password and receive a bearer token.
+- FR-1.3 Admins create staff accounts, change roles, disable/enable accounts and reset
+  passwords; the last active admin cannot be disabled or demoted. Users change their own
+  password with their current one.
+- FR-1.4 An empty database gets its first admin from configuration (`HFS_ADMIN_EMAIL` /
+  `HFS_ADMIN_PASSWORD`); the health endpoint reports when no account exists.
 - FR-1.2 Every endpoint is protected; each role may only perform the actions listed above.
   Admin may do anything.
 

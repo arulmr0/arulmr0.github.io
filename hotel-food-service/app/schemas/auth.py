@@ -25,3 +25,18 @@ class UserRead(ORMModel):
     role: Role
     is_active: bool
     created_at: datetime
+
+
+class UserUpdate(BaseModel):
+    full_name: str | None = Field(default=None, min_length=1, max_length=120)
+    role: Role | None = None
+    is_active: bool | None = None
+
+
+class PasswordReset(BaseModel):
+    new_password: str = Field(min_length=8, max_length=72)
+
+
+class PasswordChange(BaseModel):
+    current_password: str
+    new_password: str = Field(min_length=8, max_length=72)

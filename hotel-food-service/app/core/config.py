@@ -27,6 +27,11 @@ class Settings(BaseSettings):
     tax_id: str | None = None  # e.g. GSTIN
     bill_footer: str | None = "Thank you for dining with us"
 
+    # First-run bootstrap: when set, this admin account is created at start-up if it
+    # does not exist. This is how a fresh production database gets its first login.
+    admin_email: str | None = None
+    admin_password: str | None = None
+
     # Operations
     # Load the demo dataset on first boot when the database is empty (one-click deploys).
     seed_on_start: bool = False

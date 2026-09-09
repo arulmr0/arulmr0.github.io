@@ -9,6 +9,9 @@ except `POST /auth/login`.
 | `POST /auth/login` | — | Form login (`username`, `password`) → JWT |
 | `GET /auth/me` | any | Current user |
 | `POST /auth/users`, `GET /auth/users` | admin | User administration |
+| `PATCH /auth/users/{id}` | admin | Change name, role, active flag (last active admin is protected) |
+| `POST /auth/users/{id}/reset-password` | admin | Set a new password for a user |
+| `POST /auth/change-password` | any | Change own password (requires current password) |
 | `GET/POST /suppliers`, `GET/PATCH /suppliers/{id}` | read: any · write: manager, storekeeper | Supplier directory |
 | `GET/POST /inventory/ingredients`, `GET/PATCH /inventory/ingredients/{id}` | read: any · write: manager, storekeeper, chef | Item master |
 | `POST /inventory/ingredients/{id}/adjust` | manager, storekeeper, chef | Wastage / stock-count adjustment |

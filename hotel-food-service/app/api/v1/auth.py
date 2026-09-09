@@ -5,7 +5,14 @@ from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.core.deps import get_current_user, require_roles
 from app.models.user import Role, User
-from app.schemas.auth import Token, UserCreate, UserRead
+from app.schemas.auth import (
+    PasswordChange,
+    PasswordReset,
+    Token,
+    UserCreate,
+    UserRead,
+    UserUpdate,
+)
 from app.services import auth as auth_service
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -33,3 +40,30 @@ def create_user(
 @router.get("/users", response_model=list[UserRead])
 def list_users(db: Session = Depends(get_db), _: User = Depends(require_roles(Role.ADMIN))):
     return auth_service.list_users(db)
+
+
+@router.patch("/users/{user_id}", response_model=UserRead)
+def update_user(
+    user_id: int,
+    data: UserUpdate,
+    db: Session = Depends(get_db),
+    admin: User = Depends(require_roles(Role.ADMIN)),
+):
+    return auth_service.update_user(db, user_id, data, admin)
+
+
+@router.post("/users/{user_id}/reset-password", response_model=UserRead)
+def reset_password(
+    user_id: int,
+    data: PasswordReset,
+    db: Session = Depends(get_db),
+    _: User = Depends(require_roles(Role.ADMIN)),
+):
+    return auth_service.reset_password(db, user_id, data)
+
+
+@router.post("/change-password", response_model=UserRead)
+def change_password(
+    data: PasswordChange, db: Session = Depends(get_db), user: User = Depends(get_current_user)
+):
+    return auth_service.change_password(db, user, data)
