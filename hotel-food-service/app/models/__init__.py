@@ -7,6 +7,7 @@ from app.models.menu import MenuItem, RecipeLine
 from app.models.order import Order, OrderLine, Payment
 from app.models.payroll import PayrollRun, Payslip
 from app.models.procurement import GoodsReceipt, GoodsReceiptLine, PurchaseOrder, PurchaseOrderLine
+from app.models.reservation import Reservation
 from app.models.supplier import Supplier
 from app.models.user import User
 
@@ -25,6 +26,7 @@ __all__ = [
     "Order",
     "OrderLine",
     "Payment",
+    "Reservation",
     "Employee",
     "Attendance",
     "SalaryAdvance",

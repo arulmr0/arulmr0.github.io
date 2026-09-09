@@ -50,7 +50,8 @@ services stay transport-agnostic.
 | Supply chain | suppliers, purchase orders, goods receipts | `inventory.record_movement` |
 | Inventory | ingredients, stock ledger, costing | `get_ingredient`, `record_movement`, `low_stock`, `valuation` |
 | Menu | menu items, recipes | `get_menu_item`, `food_cost_minor` |
-| Sales | orders, lines, payments | `inventory.record_movement` on payment |
+| Sales | orders, lines, payments, bills | `inventory.record_movement` and `reservations.complete_for_order` on payment |
+| Reservations | table bookings | `orders.create_order` when seating |
 | HR | employees, attendance, advances | queried by payroll |
 | Payroll | runs, payslips | reads HR; marks advances recovered |
 | Reporting | none (read-only) | aggregates every context |
@@ -77,6 +78,9 @@ PurchaseOrder: DRAFT → SUBMITTED → PARTIALLY_RECEIVED → RECEIVED
 Order:         OPEN → IN_KITCHEN → SERVED → PAID
                OPEN / IN_KITCHEN / SERVED → CANCELLED
                OPEN / IN_KITCHEN → PAID (takeaway or prepaid)
+
+Reservation:   BOOKED → SEATED → COMPLETED (when the linked order is paid)
+               BOOKED → CANCELLED / NO_SHOW;  SEATED → CANCELLED
 
 PayrollRun:    DRAFT ⇄ (recompute) → FINALIZED
 ```

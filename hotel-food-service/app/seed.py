@@ -3,7 +3,7 @@
 Run with ``python -m app.seed``. Idempotent: does nothing if users already exist.
 """
 
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -25,8 +25,9 @@ from app.schemas.procurement import (
     PurchaseOrderCreate,
     PurchaseOrderLineCreate,
 )
+from app.schemas.reservation import ReservationCreate
 from app.schemas.supplier import SupplierCreate
-from app.services import auth, hr, inventory, menu, orders, procurement, suppliers
+from app.services import auth, hr, inventory, menu, orders, procurement, reservations, suppliers
 
 DEMO_PASSWORD = "Password123"
 
@@ -184,6 +185,25 @@ def seed(db: Session) -> None:
         ),
         users[Role.CASHIER].id,
     )
+
+    tonight = datetime.combine(date.today(), datetime.min.time())
+    for name, phone, size, table, hour in [
+        ("Asha Rao", "+91 98765 43210", 4, "T2", 19),
+        ("Daniel Okoye", "+91 91234 56780", 2, "T5", 20),
+        ("Meenakshi Iyer", None, 6, "T8", 20),
+    ]:
+        reservations.create_reservation(
+            db,
+            ReservationCreate(
+                guest_name=name,
+                guest_phone=phone,
+                party_size=size,
+                table_number=table,
+                reserved_at=tonight.replace(hour=hour, minute=30),
+                duration_minutes=90,
+            ),
+            manager.id,
+        )
 
     staff = [
         ("EMP-001", "Arjun Chef", "kitchen", "Head Chef", PayType.MONTHLY, 4500000, Role.CHEF),

@@ -38,7 +38,11 @@ button:disabled { opacity: .5; cursor: default; }
 .badge.in_kitchen, .badge.submitted { background: var(--info); }
 .badge.served, .badge.partially_received { background: #7c3aed; }
 .badge.paid, .badge.received, .badge.finalized { background: var(--ok); }
-.badge.cancelled { background: var(--warn); }
+.badge.cancelled, .badge.no_show { background: var(--warn); }
+.badge.booked { background: var(--info); }
+.badge.seated { background: #7c3aed; }
+.badge.completed { background: var(--ok); }
+a.btn { text-decoration: none; display: inline-block; }
 .warn { color: var(--warn); font-weight: 600; }
 .muted { color: var(--muted); }
 .login { max-width: 380px; margin: 60px auto; }

@@ -81,6 +81,24 @@ guest orders, managing staff attendance, and paying salaries.
 - FR-8.4 A live dashboard: today's sales, open orders, low stock, open POs, inventory value,
   headcount.
 
+### FR-9 Table reservations
+- FR-9.1 Front-of-house staff record bookings: guest name, phone, party size, table, start
+  time, duration and notes.
+- FR-9.2 Two active bookings may not overlap on the same table; the system rejects the
+  conflict and names the existing booking.
+- FR-9.3 A booking moves BOOKED → SEATED → COMPLETED, or ends as CANCELLED / NO_SHOW.
+  Seating opens a dine-in order on the table; paying that order completes the booking.
+- FR-9.4 Bookings are listed per day; the dashboard shows the number still active today.
+
+### FR-10 Bill printing
+- FR-10.1 Any order with lines can produce a bill: business header, bill number, date,
+  table / room, guest name when booked, lines, subtotal, tax, total, payments received and
+  balance due, with a PAID stamp once settled.
+- FR-10.2 The bill is available as structured JSON (for receipt printers and integrations)
+  and as a printable HTML page laid out for 80 mm receipt paper.
+- FR-10.3 Business name, address, tax ID and footer are configuration, not code.
+- FR-10.4 All guest-supplied text is escaped in the printable bill.
+
 ## 1.4 Non-functional requirements
 
 | ID | Requirement | How it is met |
@@ -95,6 +113,6 @@ guest orders, managing staff attendance, and paying salaries.
 | NFR-8 | Deployability | Single container image with health check |
 
 ## 1.5 Out of scope (this release)
-Table reservations, hotel PMS integration for room folios, multi-branch consolidation,
+Hotel PMS integration for room folios, multi-branch consolidation,
 tax filing formats, biometric attendance devices, and e-invoicing. Extension points for these
 are noted in `02-architecture.md`.
