@@ -1,0 +1,15 @@
+# Render Blueprint: https://render.com/deploy?repo=https://github.com/arulmr0/arulmr0.github.io
+services:
+  - type: web
+    name: hotel-food-service
+    runtime: docker
+    rootDir: hotel-food-service
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: HFS_SECRET_KEY
+        generateValue: true
+      - key: HFS_SEED_ON_START
+        value: "true"
+      - key: HFS_CURRENCY
+        value: INR

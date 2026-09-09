@@ -1,0 +1,27 @@
+name: hotel-food-service deploy
+
+# Publishes the app to a Hugging Face Space (free Docker hosting).
+# One-time setup: add a repository secret HF_TOKEN (a Hugging Face *write* token).
+# Optional secrets: HF_SPACE ("owner/name"), HFS_SECRET_KEY (stable session signing key).
+
+on:
+  push:
+    branches: [master]
+    paths: ["hotel-food-service/**", ".github/workflows/hotel-food-service-deploy.yml"]
+  workflow_dispatch:
+
+jobs:
+  hf-space:
+    runs-on: ubuntu-latest
+    env:
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      HF_SPACE: ${{ secrets.HF_SPACE }}
+      HFS_SECRET_KEY: ${{ secrets.HFS_SECRET_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install "huggingface_hub>=0.24"
+      - name: Deploy to Hugging Face Space
+        run: python hotel-food-service/scripts/deploy_hf_space.py
