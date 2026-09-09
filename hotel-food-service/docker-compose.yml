@@ -1,0 +1,12 @@
+services:
+  api:
+    build: .
+    ports: ["8000:8000"]
+    environment:
+      HFS_SECRET_KEY: ${HFS_SECRET_KEY:-please-set-a-real-secret-in-your-env-file-0123456789}
+      HFS_CURRENCY: ${HFS_CURRENCY:-INR}
+      HFS_TAX_RATE_PERCENT: ${HFS_TAX_RATE_PERCENT:-5}
+    volumes:
+      - hfs-data:/data
+volumes:
+  hfs-data:
