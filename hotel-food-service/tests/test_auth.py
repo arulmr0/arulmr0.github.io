@@ -5,6 +5,15 @@ def test_health(client):
     r = client.get("/health")
     assert r.status_code == 200
     assert r.json()["status"] == "ok"
+    assert r.json()["version"] == "0.2.0"
+
+
+def test_client_shell_is_never_cached(client):
+    for path in ("/", "/static/app.js", "/static/styles.css"):
+        r = client.get(path)
+        assert r.status_code == 200, path
+        assert r.headers["cache-control"] == "no-cache, must-revalidate", path
+    assert "cache-control" not in client.get("/health").headers
 
 
 def test_login_and_me(as_role):

@@ -1,6 +1,6 @@
 [project]
 name = "hotel-food-service"
-version = "0.1.0"
+version = "0.2.0"
 description = "End-to-end management system for a hotel food-service business: procurement, inventory, menu engineering, orders, HR, payroll and reporting."
 requires-python = ">=3.11"
 dependencies = [
