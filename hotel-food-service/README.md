@@ -10,6 +10,8 @@ reports**.
 | Inventory | Append-only stock ledger, weighted-average costing, wastage, low-stock alerts, valuation |
 | Menu | Items, per-portion recipes, food cost %, margin, portions available from stock |
 | Sales | Dine-in / room-service / takeaway orders, kitchen workflow, tax, split payments, automatic stock consumption |
+| Reservations | Table bookings with overlap protection, seat-to-order flow, no-show tracking |
+| Billing | Printable 80 mm guest bill (JSON + HTML), PAID / balance-due stamp, configurable header |
 | HR | Employees, daily attendance with clock times, salary advances |
 | Payroll | Monthly runs, overtime, allowances, absence and statutory deductions, advance recovery, immutable finalized payslips |
 | Reports | Sales summary with food cost & margin, top items, supplier spend, live dashboard |
@@ -94,5 +96,6 @@ docs/          SRS, architecture, data model, API, ADRs
 
 ## Configuration
 Copy `.env.example` to `.env`. Key settings: `HFS_DATABASE_URL`, `HFS_SECRET_KEY`,
-`HFS_CURRENCY`, `HFS_TAX_RATE_PERCENT`, payroll policy percentages, and
-`HFS_ALLOW_NEGATIVE_STOCK`.
+`HFS_CURRENCY`, `HFS_TAX_RATE_PERCENT`, payroll policy percentages,
+`HFS_ALLOW_NEGATIVE_STOCK`, and the bill header (`HFS_BUSINESS_NAME`,
+`HFS_BUSINESS_ADDRESS`, `HFS_TAX_ID`, `HFS_BILL_FOOTER`).

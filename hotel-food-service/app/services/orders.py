@@ -127,9 +127,12 @@ def pay(db: Session, order_id: int, data: PaymentCreate, user_id: int) -> Order:
     order.payments.append(payment)
 
     if paid_so_far + data.amount_minor == order.total_minor:
+        from app.services import reservations as reservation_service
+
         _consume_inventory(db, order, user_id)
         order.status = OrderStatus.PAID
         order.closed_at = utcnow()
+        reservation_service.complete_for_order(db, order)
     db.commit()
     return order
 

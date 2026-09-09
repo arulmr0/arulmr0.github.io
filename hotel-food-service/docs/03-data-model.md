@@ -15,6 +15,7 @@ erDiagram
     ORDERS ||--o{ ORDER_LINES : contains
     ORDER_LINES }o--|| MENU_ITEMS : sells
     ORDERS ||--o{ PAYMENTS : "settled by"
+    RESERVATIONS |o--o| ORDERS : "seated as"
     EMPLOYEES ||--o{ ATTENDANCE : records
     EMPLOYEES ||--o{ SALARY_ADVANCES : receives
     PAYROLL_RUNS ||--|{ PAYSLIPS : produces
@@ -39,6 +40,7 @@ erDiagram
 | `stock_movements` | Append-only. `reference_type`/`reference_id` point at the goods receipt or order that caused it. Signed `quantity`. |
 | `purchase_order_lines` | `received_quantity` accumulates across receipts; `outstanding_quantity` is derived. |
 | `order_lines` | `unit_price_minor` is copied from the menu at sale time (price history is preserved). |
+| `reservations` | `reserved_at` is the restaurant's local wall-clock time; `order_id` is set when guests are seated and is unique. |
 | `attendance` | Unique on (`employee_id`, `work_date`). |
 | `salary_advances` | `recovered_in_run_id` is NULL until a finalized run recovers it. |
 | `payroll_runs` | Unique on (`period_year`, `period_month`). |

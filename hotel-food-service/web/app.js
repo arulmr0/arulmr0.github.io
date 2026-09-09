@@ -153,6 +153,7 @@
         ${kpi("Low-stock items", `<span class="${d.low_stock_items ? "warn" : ""}">${d.low_stock_items}</span>`)}
         ${kpi("Inventory value", money(d.inventory_value_minor))}
         ${kpi("Active employees", d.active_employees)}
+        ${kpi("Reservations today", d.reservations_today)}
       </div>
       <div class="grid cols-2">
         <div class="card"><h2>Low stock</h2>${table(
@@ -421,9 +422,14 @@
             o.lines,
             "Empty order"
           )}
+          ${o.status === "open" ? `<div class="actions" style="margin:6px 0">
+              <select class="small" data-add-item="${o.id}">${options(items, (i) => `${i.name} · ${money(i.price_minor)}`)}</select>
+              <input class="small" type="number" min="1" value="1" style="width:70px" data-add-qty="${o.id}">
+              <button class="small secondary" data-action="addline" data-id="${o.id}">Add item</button></div>` : ""}
           <p class="muted">Subtotal ${money(o.subtotal_minor)} · tax ${money(o.tax_minor)} · <b>total ${money(o.total_minor)}</b></p>
           <div class="actions">
             ${(next[o.status] || []).map((s) => `<button class="small ${s === "cancelled" ? "danger" : ""}" data-action="status" data-id="${o.id}" data-status="${s}">${s.replace("_", " ")}</button>`).join("")}
+            ${o.lines.length ? `<button class="small secondary" data-action="bill" data-id="${o.id}">Print bill</button>` : ""}
             ${["open", "in_kitchen", "served"].includes(o.status) && o.lines.length
               ? `<select class="small" data-method="${o.id}"><option value="cash">Cash</option><option value="card">Card</option><option value="upi">UPI</option><option value="room_charge">Room charge</option></select>
                  <button class="small" data-action="pay" data-id="${o.id}" data-due="${due}">Pay ${money(due)}</button>`
@@ -439,6 +445,12 @@
     onAction(view, {
       status: (d) => api(`/orders/${d.id}/status`, { method: "POST", body: { status: d.status } }),
       rm: (d) => api(`/orders/${d.id}/lines/${d.line}`, { method: "DELETE" }),
+      bill: (d) => printBill(d.id),
+      addline: (d) =>
+        api(`/orders/${d.id}/lines`, {
+          method: "POST",
+          body: { menu_item_id: Number($(`[data-add-item="${d.id}"]`).value), quantity: Number($(`[data-add-qty="${d.id}"]`).value) },
+        }),
       pay: async (d) => {
         const method = $(`[data-method="${d.id}"]`).value;
         await api(`/orders/${d.id}/payments`, { method: "POST", body: { method, amount_minor: Number(d.due) } });
@@ -624,6 +636,85 @@
       sessionStorage.setItem("rep-from", e.target.from.value);
       sessionStorage.setItem("rep-to", e.target.to.value);
       render();
+    });
+  };
+
+  // Fetch the printable bill with the bearer token, then hand it to a print window.
+  async function printBill(orderId) {
+    const res = await fetch(`${API}/orders/${orderId}/bill.html`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+    if (!res.ok) throw new Error((await res.json().catch(() => ({}))).detail || res.statusText);
+    const win = window.open("", "_blank", "width=420,height=640");
+    if (!win) throw new Error("Pop-up blocked: allow pop-ups for this site to print bills");
+    win.document.open();
+    win.document.write(await res.text());
+    win.document.close();
+    win.focus();
+    win.addEventListener("load", () => win.print());
+  }
+
+  views.reservations = async () => {
+    const day = sessionStorage.getItem("res-day") || today();
+    const rows = await api(`/reservations?on=${day}`);
+    const fmtTime = (iso) => iso.slice(11, 16);
+    const endOf = (r) => {
+      const d = new Date(r.reserved_at);
+      d.setMinutes(d.getMinutes() + r.duration_minutes);
+      return d.toTimeString().slice(0, 5);
+    };
+    view.innerHTML = `
+      <h1>Table reservations</h1>
+      <div class="card"><h2>New reservation</h2>
+        <form id="f" class="inline">
+          <label>Guest name <input name="guest_name" required></label>
+          <label>Phone <input name="guest_phone"></label>
+          <label>Party size <input name="party_size" type="number" min="1" value="2" required></label>
+          <label>Table <input name="table_number" required placeholder="T4"></label>
+          <label>Date <input name="date" type="date" value="${day}" required></label>
+          <label>Time <input name="time" type="time" value="19:30" required></label>
+          <label>Duration (min) <input name="duration_minutes" type="number" min="15" step="15" value="90"></label>
+          <label>Notes <input name="notes"></label>
+          <button>Book</button>
+        </form></div>
+      <div class="card">
+        <form class="inline" id="day"><label>Show date <input name="day" type="date" value="${day}"></label><button class="secondary">Load</button></form>
+        ${table(
+          [
+            { label: "Time", render: (r) => `${fmtTime(r.reserved_at)} to ${endOf(r)}` },
+            { label: "Table", render: (r) => esc(r.table_number) },
+            { label: "Guest", render: (r) => `${esc(r.guest_name)}<br><span class="muted">${esc(r.guest_phone ?? "")}</span>` },
+            { label: "Party", num: true, render: (r) => r.party_size },
+            { label: "Status", render: (r) => badge(r.status) },
+            { label: "Notes", render: (r) => esc(r.notes) },
+            { label: "", render: (r) => `<div class="actions">
+                ${r.status === "booked" ? `<button class="small" data-action="seat" data-id="${r.id}">Seat &amp; open order</button>
+                  <button class="small secondary" data-action="status" data-id="${r.id}" data-status="no_show">No-show</button>` : ""}
+                ${r.status === "seated" ? `<a class="btn small" href="#orders">Go to order</a>` : ""}
+                ${["booked", "seated"].includes(r.status) ? `<button class="small danger" data-action="status" data-id="${r.id}" data-status="cancelled">Cancel</button>` : ""}
+              </div>` },
+          ],
+          rows,
+          "No reservations for this day."
+        )}
+      </div>`;
+    onSubmit($("#f"), (d) =>
+      api("/reservations", {
+        method: "POST",
+        body: { ...d, reserved_at: `${d.date}T${d.time}:00`, date: undefined, time: undefined },
+      })
+    );
+    $("#day").addEventListener("submit", (e) => {
+      e.preventDefault();
+      sessionStorage.setItem("res-day", e.target.day.value);
+      render();
+    });
+    onAction(view, {
+      seat: async (d) => {
+        await api(`/reservations/${d.id}/seat`, { method: "POST" });
+        toast("Guests seated; a dine-in order is open on the Orders page");
+      },
+      status: (d) => api(`/reservations/${d.id}/status`, { method: "POST", body: { status: d.status } }),
     });
   };
 

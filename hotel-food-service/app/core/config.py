@@ -21,6 +21,12 @@ class Settings(BaseSettings):
     access_token_minutes: int = 480
     currency: str = "INR"
 
+    # Bill header / footer
+    business_name: str = "Hotel Food Service"
+    business_address: str | None = None
+    tax_id: str | None = None  # e.g. GSTIN
+    bill_footer: str | None = "Thank you for dining with us"
+
     # Operations
     # Load the demo dataset on first boot when the database is empty (one-click deploys).
     seed_on_start: bool = False

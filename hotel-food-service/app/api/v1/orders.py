@@ -1,10 +1,12 @@
 from fastapi import APIRouter, Depends, Query
+from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
 from app.core.deps import get_current_user, require_roles
 from app.models.order import OrderStatus
 from app.models.user import Role, User
+from app.schemas.bill import BillRead
 from app.schemas.order import (
     OrderCreate,
     OrderLineInput,
@@ -12,6 +14,7 @@ from app.schemas.order import (
     OrderStatusChange,
     PaymentCreate,
 )
+from app.services import bills as bill_service
 from app.services import orders as service
 
 router = APIRouter(prefix="/orders", tags=["sales"])
@@ -76,3 +79,15 @@ def pay(
     user: User = Depends(_front_of_house),
 ):
     return service.pay(db, order_id, data, user.id)
+
+
+@router.get("/{order_id}/bill", response_model=BillRead)
+def bill(order_id: int, db: Session = Depends(get_db), _: User = Depends(get_current_user)):
+    """Structured bill for receipt printers, e-mail, or other integrations."""
+    return bill_service.build_bill(db, order_id)
+
+
+@router.get("/{order_id}/bill.html", response_class=HTMLResponse)
+def bill_html(order_id: int, db: Session = Depends(get_db), _: User = Depends(get_current_user)):
+    """Printable bill (80 mm receipt layout)."""
+    return HTMLResponse(bill_service.render_html(bill_service.build_bill(db, order_id)))

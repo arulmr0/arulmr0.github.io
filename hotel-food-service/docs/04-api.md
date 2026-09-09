@@ -24,6 +24,10 @@ except `POST /auth/login`.
 | `POST /orders/{id}/lines`, `DELETE /orders/{id}/lines/{line_id}` | manager, cashier | Edit lines (OPEN only) |
 | `POST /orders/{id}/status` | manager, cashier, chef | Kitchen / service transitions |
 | `POST /orders/{id}/payments` | manager, cashier | Record payment; closes order and consumes stock when settled |
+| `GET /orders/{id}/bill`, `GET /orders/{id}/bill.html` | any | Bill as JSON / printable 80 mm HTML |
+| `GET/POST /reservations`, `GET/PATCH /reservations/{id}` | read: any · write: manager, cashier | Table bookings (list by `on=YYYY-MM-DD`) |
+| `POST /reservations/{id}/seat` | manager, cashier | Seat guests: opens a dine-in order on the table |
+| `POST /reservations/{id}/status` | manager, cashier | cancelled / no_show / completed |
 | `GET/POST /hr/employees`, `GET/PATCH /hr/employees/{id}` | hr, manager (accountant read) | Employee master |
 | `POST /hr/attendance`, `GET /hr/attendance` | hr, manager (accountant read) | Attendance upsert / list |
 | `POST /hr/advances`, `GET /hr/advances` | hr, manager, accountant | Salary advances |

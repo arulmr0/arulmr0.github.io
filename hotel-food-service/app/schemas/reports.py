@@ -40,3 +40,4 @@ class DashboardSummary(BaseModel):
     open_purchase_orders: int
     active_employees: int
     inventory_value_minor: int
+    reservations_today: int

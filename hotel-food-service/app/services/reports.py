@@ -17,6 +17,7 @@ from app.models.procurement import (
     PurchaseOrderLine,
     PurchaseOrderStatus,
 )
+from app.models.reservation import Reservation, ReservationStatus
 from app.models.supplier import Supplier
 from app.schemas.reports import DashboardSummary, SalesSummary, SupplierSpend, TopItem
 from app.services import inventory as inventory_service
@@ -171,4 +172,14 @@ def dashboard(db: Session, today: date | None = None) -> DashboardSummary:
         open_purchase_orders=int(open_pos or 0),
         active_employees=int(active_employees or 0),
         inventory_value_minor=inventory_service.valuation(db).total_value_minor,
+        reservations_today=int(
+            db.scalar(
+                select(func.count(Reservation.id)).where(
+                    Reservation.reserved_at >= start,
+                    Reservation.reserved_at < end,
+                    Reservation.status.in_([ReservationStatus.BOOKED, ReservationStatus.SEATED]),
+                )
+            )
+            or 0
+        ),
     )
