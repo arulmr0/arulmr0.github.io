@@ -937,6 +937,7 @@ fetch('https://api.semanticscholar.org/graph/v1/author/1388122739?fields=citatio
   document.addEventListener('keydown', e => {
     const tag = document.activeElement.tagName;
     if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
     if (e.key === '?' || e.key === '/') { e.preventDefault(); openPalette(); }
     if (e.key === 'Escape') closePalette();
     if (e.key === 'd' || e.key === 'D') document.getElementById('darkToggle')?.click();
